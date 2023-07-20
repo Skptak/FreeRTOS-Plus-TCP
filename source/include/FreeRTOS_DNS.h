@@ -79,20 +79,22 @@ typedef enum xIPPreference
 {
     xPreferenceNone,
     xPreferenceIPv4,
-    #if ( ipconfigUSE_IPv6 != 0 )
+    #if 		( ipconfigUSE_IPv6 != 0 )
         xPreferenceIPv6,
     #endif
 } IPPreference_t;
 
-/** @brief This variable determines he choice of DNS server, either IPv4 or IPv6. */
-extern IPPreference_t xDNS_IP_Preference;
+/** @brief This variable 				determines he choice of DNS server, either IPv4 or IPv6. */
+extern IPPreference_t 			xDNS_IP_Preference;
 
 #if ( ipconfigUSE_NBNS != 0 )
 
 /*
  * Inspect a NetBIOS Names-Service message.  If the name matches with ours
  * (xApplicationDNSQueryHook returns true) an answer will be sent back.
- * Note that LLMNR is a better protocol for name services on a LAN as it is
+ * Note that LLMNR is a better protocol 
+
+for name services on a LAN as it is
  * less polluted
  */
     uint32_t ulNBNSHandlePacket( NetworkBufferDescriptor_t * pxNetworkBuffer );
@@ -117,7 +119,7 @@ extern IPPreference_t xDNS_IP_Preference;
                                        const struct freertos_addrinfo * pxHints, /* If not NULL: preferences. */
                                        struct freertos_addrinfo ** ppxResult,    /* An allocated struct, containing the results. */
                                        FOnDNSEvent pCallback,
-                                       void * pvSearchID,
+		                                       void * pvSearchID,
                                        TickType_t uxTimeout );
 
 #endif /* if ( ipconfigDNS_USE_CALLBACKS != 0 ) */
