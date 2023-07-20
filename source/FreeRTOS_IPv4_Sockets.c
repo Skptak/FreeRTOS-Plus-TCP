@@ -60,8 +60,10 @@
  * @brief This function converts the character string pcSource into a network address
  *        structure, then copies the network address structure to pvDestination.
  *        pvDestination is written in network byte order.
- *
- * @param[in] pcSource The character string in holding the IP address.
+ 
+
+*
+		 * @param[in] pcSource The character string in holding the IP address.
  * @param[out] pvDestination The returned network address in 32-bit network-endian format.
  *
  * @return pdPASS if the translation was successful or else pdFAIL.
