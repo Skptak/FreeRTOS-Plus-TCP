@@ -243,7 +243,7 @@ eFrameProcessingResult_t eARPProcessPacket( const NetworkBufferDescriptor_t * px
             /* Process received ARP frame to see if there is a clash. */
             #if ( ipconfigARP_USE_CLASH_DETECTION != 0 )
                 {
-		                    NetworkEndPoint_t * pxSourceEndPoint = FreeRTOS_FindEndPointOnIP_IPv4( ulSenderProtocolAddress, 2 );
+                    NetworkEndPoint_t * pxSourceEndPoint = FreeRTOS_FindEndPointOnIP_IPv4( ulSenderProtocolAddress, 2 );
 
                     if( ( pxSourceEndPoint != NULL ) && ( pxSourceEndPoint->ipv4_settings.ulIPAddress == ulSenderProtocolAddress ) )
                     {
