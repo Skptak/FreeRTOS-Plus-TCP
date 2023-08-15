@@ -171,7 +171,8 @@ jobs:
           echo "::group:: ${{ env.stepName }}"
           cmake -S . -B build -DFREERTOS_PLUS_TCP_TEST_CONFIGURATION=ENABLE_ALL_IPV4_TCP
           cmake --build build --target clean
-          cmake --build build --target freertos_plus_tcp_build_testecho "::endgroup::"
+          cmake --build build --target freertos_plus_tcp_build_test
+          echo "::endgroup::"
           echo "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
       - env:
@@ -208,6 +209,21 @@ jobs:
           cmake --build build --target freertos_plus_tcp_build_test
           echo "::endgroup::"
           echo "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
+
+      - env:
+          stepName: Build checks (Header Self Contain)
+        shell: bash
+        run: |
+          cmake -S . -B build -DFREERTOS_PLUS_TCP_TEST_CONFIGURATION=HEADER_SELF_CONTAIN
+          cmake --build build --target clean
+          cmake --build build --target freertos_plus_tcp_build_test_FreeRTOS_DHCP
+          cmake --build build --target freertos_plus_tcp_build_test_FreeRTOS_DNS
+          cmake --build build --target freertos_plus_tcp_build_test_FreeRTOS_IP
+          cmake --build build --target freertos_plus_tcp_build_test_FreeRTOS_ND
+          cmake --build build --target freertos_plus_tcp_build_test_FreeRTOS_Routing
+          cmake --build build --target freertos_plus_tcp_build_test_FreeRTOS_Sockets
+          cmake --build build --target freertos_plus_tcp_build_test_NetworkBufferManagement
+          cmake --build build --target freertos_plus_tcp_build_test_NetworkInterface
 
   complexity:
     runs-on: ubuntu-latest
