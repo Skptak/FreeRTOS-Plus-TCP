@@ -218,7 +218,7 @@ BaseType_t xProcessReceivedTCPPacket_IPV4( NetworkBufferDescriptor_t * pxDescrip
                 {
                     FreeRTOS_debug_printf( ( "TCP: RST received from %xip:%u for %u\n", ( unsigned ) xRemoteIP.xIPAddress.ulIP_IPv4, usRemotePort, usLocalPort ) );
 
-                    /* Implement https://tools.ietf.org/html/rfc5961#section-3.2. */
+                    /* Implement https://datatracker.ietf.org/doc/html/rfc5961#section-3.2. */
                     if( pxSocket->u.xTCP.eTCPState == eCONNECT_SYN )
                     {
                         /* Per the above RFC, "In the SYN-SENT state ... the RST is
