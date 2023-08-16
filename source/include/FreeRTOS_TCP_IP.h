@@ -80,9 +80,9 @@ typedef enum eTCP_STATE
     eCLOSING,      /* 9 (server + client) waiting for a connection termination
                       request acknowledgement from the remote TCP. */
     eLAST_ACK,     /*10 (server + client) waiting for an acknowledgement of the
-                    * connection termination request     previously sent to the
-                    * remote     TCP     (which includes an acknowledgement of its
-                    * connection     termination request). */
+                    * connection termination request     previously sent to the remote
+                    * TCP     (which includes an acknowledgement of its connection
+                    * termination request). */
     eTIME_WAIT, /*11 (either server or client) waiting for enough time to pass
                  * to be sure the remote TCP received the acknowledgement of its
                  * connection termination request. [According to RFC 793 a
@@ -93,9 +93,8 @@ typedef enum eTCP_STATE
 /*
  * The meaning of the TCP flags:
  */
-#define tcpTCP_FLAG_FIN                                  \
-    ( ( uint8_t ) 0x01U ) /**< No more data from sender. \
-                           */
+#define tcpTCP_FLAG_FIN ( ( uint8_t ) 0x01U ) /**< No more data from sender. \
+                                               */
 #define tcpTCP_FLAG_SYN \
     ( ( uint8_t ) 0x02U ) /**< Synchronize sequence numbers. */
 #define tcpTCP_FLAG_RST ( ( uint8_t ) 0x04U ) /**< Reset the connection. */
@@ -107,9 +106,8 @@ typedef enum eTCP_STATE
 #define tcpTCP_FLAG_URG \
     ( ( uint8_t ) 0x20U ) /**< Urgent pointer field is significant. */
 #define tcpTCP_FLAG_ECN ( ( uint8_t ) 0x40U ) /**< ECN-Echo. */
-#define tcpTCP_FLAG_CWR                                   \
-    ( ( uint8_t ) 0x80U ) /**< Congestion Window Reduced. \
-                           */
+#define tcpTCP_FLAG_CWR ( ( uint8_t ) 0x80U ) /**< Congestion Window Reduced. \
+                                               */
 
 #define tcpTCP_FLAG_CTRL \
     ( ( uint8_t ) 0x1FU ) /**< A mask to filter all protocol flags. */
