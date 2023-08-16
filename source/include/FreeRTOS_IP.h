@@ -362,17 +362,18 @@ void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
                                      TickType_t uxBlockTimeTicks );
 /* clang-format off */
 #endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
-
+/* clang-format on */
 /*
  * Returns the addresses stored in an end-point structure.
  * This function already existed in the release with the single-interface.
  * Only the first parameters is new: an end-point
  */
-void FreeRTOS_GetEndPointConfiguration( uint32_t * pulIPAddress,
-                                        uint32_t * pulNetMask,
-                                        uint32_t * pulGatewayAddress,
-                                        uint32_t * pulDNSServerAddress,
-                                        const struct xNetworkEndPoint * pxEndPoint );
+void FreeRTOS_GetEndPointConfiguration(
+    uint32_t * pulIPAddress,
+    uint32_t * pulNetMask,
+    uint32_t * pulGatewayAddress,
+    uint32_t * pulDNSServerAddress,
+    const struct xNetworkEndPoint * pxEndPoint );
 
 void FreeRTOS_SetEndPointConfiguration( const uint32_t * pulIPAddress,
                                         const uint32_t * pulNetMask,
@@ -386,12 +387,14 @@ void * FreeRTOS_GetUDPPayloadBuffer_Multi( size_t uxRequestedSizeBytes,
                                            TickType_t uxBlockTimeTicks,
                                            uint8_t ucIPType );
 
-/* MISRA defining 'FreeRTOS_SendPingRequest' should be dependent on 'ipconfigSUPPORT_OUTGOING_PINGS'.
- * In order not to break some existing project, define it unconditionally. */
+/* MISRA defining 'FreeRTOS_SendPingRequest' should be dependent on
+ * 'ipconfigSUPPORT_OUTGOING_PINGS'. In order not to break some existing
+ * project, define it unconditionally. */
 BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress,
                                      size_t uxNumberOfBytesToSend,
                                      TickType_t uxBlockTimeTicks );
 
+/* clang-format off */
 void FreeRTOS_ReleaseUDPPayloadBuffer( void const * pvBuffer );
 const uint8_t * FreeRTOS_GetMACAddress( void );
 void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
