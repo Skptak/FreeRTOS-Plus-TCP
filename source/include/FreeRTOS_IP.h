@@ -282,34 +282,35 @@ uint32_t FreeRTOS_round_down( uint32_t a, uint32_t d );
 
 /* clang-format off */
 #define ipMS_TO_MIN_TICKS( xTimeInMs )    ( ( pdMS_TO_TICKS( ( xTimeInMs ) ) < ( ( TickType_t ) 1U ) ) ? ( ( TickType_t ) 1U ) : pdMS_TO_TICKS( ( xTimeInMs ) ) )
+/* clang-format on */
 
 /* For backward compatibility. */
-#define pdMS_TO_MIN_TICKS( xTimeInMs )    ipMS_TO_MIN_TICKS( xTimeInMs )
+#define pdMS_TO_MIN_TICKS( xTimeInMs ) ipMS_TO_MIN_TICKS( xTimeInMs )
 
 #ifndef pdTRUE_SIGNED
-    #define pdTRUE_SIGNED    pdTRUE
+    #define pdTRUE_SIGNED pdTRUE
 #endif /* pdTRUE_SIGNED */
 
 #ifndef pdFALSE_SIGNED
-    #define pdFALSE_SIGNED    pdFALSE
+    #define pdFALSE_SIGNED pdFALSE
 #endif /* pdFALSE_SIGNED */
 
 #ifndef pdTRUE_UNSIGNED
-    #define pdTRUE_UNSIGNED    ( 1U )
+    #define pdTRUE_UNSIGNED ( 1U )
 #endif /* pdTRUE_UNSIGNED */
 
 #ifndef pdFALSE_UNSIGNED
-    #define pdFALSE_UNSIGNED    ( 0U )
+    #define pdFALSE_UNSIGNED ( 0U )
 #endif /* pdFALSE_UNSIGNED */
 
 #ifndef ipTRUE_BOOL
-    #define ipTRUE_BOOL    ( 1 == 1 )
+    #define ipTRUE_BOOL ( 1 == 1 )
 #endif /* ipTRUE_BOOL */
 
 #ifndef ipFALSE_BOOL
-    #define ipFALSE_BOOL    ( 1 == 2 )
+    #define ipFALSE_BOOL ( 1 == 2 )
 #endif /* ipFALSE_BOOL */
-
+/* clang-format off */
 /*
  * FULL, UP-TO-DATE AND MAINTAINED REFERENCE DOCUMENTATION FOR ALL THESE
  * FUNCTIONS IS AVAILABLE ON THE FOLLOWING URL:
