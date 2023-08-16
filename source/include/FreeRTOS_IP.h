@@ -363,9 +363,10 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t * pulIPAddress,
 
 void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
                                      TickType_t uxBlockTimeTicks );
-/* clang-format off */
-#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
-/* clang-format on */
+
+#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( \
+        * ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+
 /*
  * Returns the addresses stored in an end-point structure.
  * This function already existed in the release with the single-interface.
