@@ -363,10 +363,9 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t * pulIPAddress,
 
 void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
                                      TickType_t uxBlockTimeTicks );
-
-#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( \
-        * ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
-
+/* clang-format off */
+#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+/* clang-format on */
 /*
  * Returns the addresses stored in an end-point structure.
  * This function already existed in the release with the single-interface.
@@ -506,23 +505,20 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
     #define FOnTcpSent                 FOnTCPSent_t
 #endif /* ipconfigENABLE_BACKWARD_COMPATIBILITY */
 
-#if( ipconfigHAS_PRINTF != 0 )
-extern void vPrintResourceStats( void );
+/* clang-format off */
+#if ( ipconfigHAS_PRINTF != 0 )
+    extern void vPrintResourceStats( void );
 #else
-    /**< ipconfigHAS_PRINTF is not defined.
-     * Define vPrintResourceStats to a do-while( 0 ). */
-    /* clang-format off */
-    #define vPrintResourceStats()    do {} while( ipFALSE_BOOL )
-    /* clang-format on */
+    #define vPrintResourceStats()    do {} while( ipFALSE_BOOL )     /**< ipconfigHAS_PRINTF is not defined. Define vPrintResourceStats to a do-while( 0 ). */
 #endif
 
-#if( ipconfigUSE_TCP != 0 )
+#if ( ipconfigUSE_TCP != 0 )
 
-/** @brief Set to a non-zero value if one or more TCP message have been
- * processed within the last round. */
-extern BaseType_t xProcessedTCPMessage;
+/** @brief Set to a non-zero value if one or more TCP message have been processed
+ * within the last round. */
+    extern BaseType_t xProcessedTCPMessage;
 #endif
-
+/* clang-format on */
 #include "FreeRTOS_IP_Utils.h" /*TODO can be moved after other 2 includes */
 
 #include "FreeRTOS_IPv4.h"
