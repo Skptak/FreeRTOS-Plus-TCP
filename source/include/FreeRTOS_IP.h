@@ -143,16 +143,19 @@ extern uint32_t ulApplicationGetNextSequenceNumber(
 #ifndef ipconfigMAX_IP_TASK_SLEEP_TIME
     #define ipconfigMAX_IP_TASK_SLEEP_TIME ( pdMS_TO_TICKS( 10000UL ) )
 #endif
-/* clang-format off */
 /* Trace macros to aid in debugging, disabled if ipconfigHAS_PRINTF != 1 */
-#if ( ipconfigHAS_PRINTF == 1 )
-    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )    type var = ( init ) /**< Trace macro to set "type var = init". */
-    #define DEBUG_SET_TRACE_VARIABLE( var, value )             var = ( value )     /**< Trace macro to set var = value. */
+#if( ipconfigHAS_PRINTF == 1 )
+    /**< Trace macro to set "type var = init". */
+    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init ) type var = ( init )
+
+    /**< Trace macro to set var = value. */
+    #define DEBUG_SET_TRACE_VARIABLE( var, value )          var = ( value )
 #else
-    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )                        /**< Empty definition since ipconfigHAS_PRINTF != 1. */
-    #define DEBUG_SET_TRACE_VARIABLE( var, value )                                 /**< Empty definition since ipconfigHAS_PRINTF != 1. */
+    /**< Empty definition since ipconfigHAS_PRINTF != 1. */
+    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )
+    /**< Empty definition since ipconfigHAS_PRINTF != 1. */
+    #define DEBUG_SET_TRACE_VARIABLE( var, value )
 #endif
-/* clang-format on */
 /**
  * The structure used to store buffers and pass them around the network stack.
  * Buffers can be in use by the stack, in use by the network interface hardware
