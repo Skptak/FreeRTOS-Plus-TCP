@@ -120,30 +120,30 @@ extern uint32_t ulApplicationGetNextSequenceNumber(
     #define ipBUFFER_PADDING ( 8U + ipconfigPACKET_FILLER_SIZE )
 #endif
 
-/* clang-format off */
 /* The offset of ucTCPFlags within the TCP header. */
-#define ipTCP_FLAGS_OFFSET      13U
+#define ipTCP_FLAGS_OFFSET   13U
 
 /** @brief Returned to indicate a valid checksum. */
-#define ipCORRECT_CRC           0xffffU
+#define ipCORRECT_CRC        0xffffU
 
 /** @brief Returned to indicate incorrect checksum. */
-#define ipWRONG_CRC             0x0000U
+#define ipWRONG_CRC          0x0000U
 
-/** @brief Returned as the (invalid) checksum when the length of the data being checked
- * had an invalid length. */
-#define ipINVALID_LENGTH        0x1234U
+/** @brief Returned as the (invalid) checksum when the length of the data being
+ * checked had an invalid length. */
+#define ipINVALID_LENGTH     0x1234U
 
-/** @brief Returned as the (invalid) checksum when the protocol being checked is not
- * handled.  The value is chosen simply to be easy to spot when debugging. */
-#define ipUNHANDLED_PROTOCOL    0x4321U
+/** @brief Returned as the (invalid) checksum when the protocol being checked is
+ * not handled.  The value is chosen simply to be easy to spot when debugging.
+ */
+#define ipUNHANDLED_PROTOCOL 0x4321U
 
-/** @brief The maximum time the IP task is allowed to remain in the Blocked state if no
- * events are posted to the network event queue. */
+/** @brief The maximum time the IP task is allowed to remain in the Blocked
+ * state if no events are posted to the network event queue. */
 #ifndef ipconfigMAX_IP_TASK_SLEEP_TIME
-    #define ipconfigMAX_IP_TASK_SLEEP_TIME    ( pdMS_TO_TICKS( 10000UL ) )
+    #define ipconfigMAX_IP_TASK_SLEEP_TIME ( pdMS_TO_TICKS( 10000UL ) )
 #endif
-
+/* clang-format off */
 /* Trace macros to aid in debugging, disabled if ipconfigHAS_PRINTF != 1 */
 #if ( ipconfigHAS_PRINTF == 1 )
     #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )    type var = ( init ) /**< Trace macro to set "type var = init". */
@@ -175,6 +175,7 @@ typedef struct xNETWORK_BUFFER
 #define ul_IPAddress     xIPAddress.xIP_IPv4
 #define x_IPv6Address    xIPAddress.xIP_IPv6
 } NetworkBufferDescriptor_t;
+
 
 #include "pack_struct_start.h"
 
