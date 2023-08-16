@@ -394,24 +394,26 @@ BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress,
                                      size_t uxNumberOfBytesToSend,
                                      TickType_t uxBlockTimeTicks );
 
-/* clang-format off */
 void FreeRTOS_ReleaseUDPPayloadBuffer( void const * pvBuffer );
 const uint8_t * FreeRTOS_GetMACAddress( void );
-void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
-#if ( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
+void FreeRTOS_UpdateMACAddress(
+    const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
+#if( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
     /* This function shall be defined by the application. */
-    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
-        void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && \
+        ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
     #else
-        void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
-                                                   struct xNetworkEndPoint * pxEndPoint );
+void vApplicationIPNetworkEventHook_Multi(
+    eIPCallbackEvent_t eNetworkEvent,
+    struct xNetworkEndPoint * pxEndPoint );
     #endif
 #endif
-#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
-    void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
-                                    uint16_t usIdentifier );
+#if( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
+                                uint16_t usIdentifier );
 #endif
-
+/* clang-format off */
 /* xARPWaitResolution checks if an IPv4 address is already known. If not
  * it may send an ARP request and wait for a reply.  This function will
  * only be called from an application. */
