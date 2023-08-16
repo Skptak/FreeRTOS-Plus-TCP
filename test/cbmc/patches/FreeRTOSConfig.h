@@ -45,16 +45,17 @@
 #define configUSE_PREEMPTION                    1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #define configMAX_PRIORITIES                    ( 7 )
-#define configTICK_RATE_HZ                                                     \
-    ( 1000 ) /* In this non-real time simulated environment the tick frequency \
-                has to be at least a multiple of the Win32 tick frequency, and \
-                therefore very slow. */
-#define configMINIMAL_STACK_SIZE                                               \
-    ( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to \
-                                 hold one small structure as the real stack is \
-                                 part of the Win32 thread. */
-#define configTOTAL_HEAP_SIZE   ( ( size_t ) ( 2048U * 1024U ) )
-#define configMAX_TASK_NAME_LEN ( 15 )
+
+/* In this non-real time simulated environment the tick frequency has to be at
+ * least a multiple of the Win32 tick frequency, and therefore very slow. */
+
+#define configTICK_RATE_HZ                      ( 1000 )
+/* In this simulated case, the stack only has to hold one small structure as the
+ * real stack is  part of the Win32 thread. */
+
+#define configMINIMAL_STACK_SIZE                ( ( unsigned short ) 60 )
+#define configTOTAL_HEAP_SIZE                   ( ( size_t ) ( 2048U * 1024U ) )
+#define configMAX_TASK_NAME_LEN                 ( 15 )
 #ifndef configUSE_16_BIT_TICKS
     #define configUSE_16_BIT_TICKS 0
 #endif
@@ -65,13 +66,13 @@
 #ifndef configUSE_RECURSIVE_MUTEXES
     #define configUSE_RECURSIVE_MUTEXES 1
 #endif
-#define configQUEUE_REGISTRY_SIZE      0
-#define configUSE_APPLICATION_TASK_TAG 1
-#define configUSE_COUNTING_SEMAPHORES  1
-#define configUSE_ALTERNATIVE_API      0
-#define configNUM_THREAD_LOCAL_STORAGE_POINTERS \
-    3 /* FreeRTOS+FAT requires 2 pointers if a CWD is supported. */
-#define configRECORD_STACK_HIGH_ADDRESS 1
+#define configQUEUE_REGISTRY_SIZE               0
+#define configUSE_APPLICATION_TASK_TAG          1
+#define configUSE_COUNTING_SEMAPHORES           1
+#define configUSE_ALTERNATIVE_API               0
+/* FreeRTOS+FAT requires 2 pointers if a CWD is supported. */
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 3
+#define configRECORD_STACK_HIGH_ADDRESS         1
 
 /* Hook function related definitions. */
 #ifndef configUSE_TICK_HOOK
@@ -79,9 +80,8 @@
 #endif
 #define configUSE_IDLE_HOOK            1
 #define configUSE_MALLOC_FAILED_HOOK   1
-#define configCHECK_FOR_STACK_OVERFLOW 0 /* Not applicable to the Win32 port. \
-                                          */
-
+/* Not applicable to the Win32 port. */
+#define configCHECK_FOR_STACK_OVERFLOW 0
 /* Software timer related definitions. */
 #define configUSE_TIMERS               1
 #define configTIMER_TASK_PRIORITY      ( configMAX_PRIORITIES - 1 )
