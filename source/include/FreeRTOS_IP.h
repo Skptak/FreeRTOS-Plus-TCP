@@ -217,27 +217,30 @@ typedef enum ePING_REPLY_STATUS
     eInvalidData /**< A reply was received to an outgoing ping but the payload
                     of the reply was not correct. */
 } ePingReplyStatus_t;
-
+/* clang-format off */
 /**
  * The software timer struct for various IP functions
  */
 typedef struct xIP_TIMER
 {
-    uint32_t bActive : 1, /**< This timer is running and must be processed. */
-        bExpired : 1;   /**< Timer has expired and a task must be processed. */
-    TimeOut_t xTimeOut; /**< The timeout value. */
+    uint32_t
+        bActive : 1,            /**< This timer is running and must be processed. */
+        bExpired : 1;           /**< Timer has expired and a task must be processed. */
+    TimeOut_t xTimeOut;         /**< The timeout value. */
     TickType_t ulRemainingTime; /**< The amount of time remaining. */
     TickType_t ulReloadTime;    /**< The value of reload time. */
 } IPTimer_t;
 
-/* clang-format off */
-/* Endian related definitions. */
-#if ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
 
-/* FreeRTOS_htons / FreeRTOS_htonl: some platforms might have built-in versions
- * using a single instruction so allow these versions to be overridden. */
+/* Endian related definitions. */
+#if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+
+    /* FreeRTOS_htons / FreeRTOS_htonl: some platforms might have built-in
+     * versions using a single instruction so allow these versions to be
+     * overridden. */
     #ifndef FreeRTOS_htons
-        #define FreeRTOS_htons( usIn )    ( ( uint16_t ) ( ( ( usIn ) << 8U ) | ( ( usIn ) >> 8U ) ) )
+        #define FreeRTOS_htons( usIn ) \
+            ( ( uint16_t ) ( ( ( usIn ) << 8U ) | ( ( usIn ) >> 8U ) ) )
     #endif
 
     #ifndef FreeRTOS_htonl
@@ -255,11 +258,13 @@ typedef struct xIP_TIMER
 
 #else /* ipconfigBYTE_ORDER */
 
-    #define FreeRTOS_htons( x )    ( ( uint16_t ) ( x ) )
-    #define FreeRTOS_htonl( x )    ( ( uint32_t ) ( x ) )
+    #define FreeRTOS_htons( x ) ( ( uint16_t ) ( x ) )
+    #define FreeRTOS_htonl( x ) ( ( uint32_t ) ( x ) )
 
 #endif /* ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN */
+
 /* clang-format on */
+
 #define FreeRTOS_ntohs( x ) FreeRTOS_htons( x )
 #define FreeRTOS_ntohl( x ) FreeRTOS_htonl( x )
 
@@ -500,22 +505,22 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
     #define FOnUdpSent                 FOnUDPSent_t
     #define FOnTcpSent                 FOnTCPSent_t
 #endif /* ipconfigENABLE_BACKWARD_COMPATIBILITY */
+
 /* clang-format off */
 #if ( ipconfigHAS_PRINTF != 0 )
     extern void vPrintResourceStats( void );
 #else
     #define vPrintResourceStats()    do {} while( ipFALSE_BOOL )     /**< ipconfigHAS_PRINTF is not defined. Define vPrintResourceStats to a do-while( 0 ). */
 #endif
+/* clang-format on */
+#if( ipconfigUSE_TCP != 0 )
 
-#if ( ipconfigUSE_TCP != 0 )
-
-/** @brief Set to a non-zero value if one or more TCP message have been processed
- * within the last round. */
-    extern BaseType_t xProcessedTCPMessage;
+/** @brief Set to a non-zero value if one or more TCP message have been
+ * processed within the last round. */
+extern BaseType_t xProcessedTCPMessage;
 #endif
 
 #include "FreeRTOS_IP_Utils.h" /*TODO can be moved after other 2 includes */
-
 
 #include "FreeRTOS_IPv4.h"
 
@@ -523,7 +528,7 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    } /* extern "C" */
+} /* extern "C" */
 #endif
 /* *INDENT-ON* */
 
