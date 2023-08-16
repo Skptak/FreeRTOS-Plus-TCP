@@ -343,23 +343,24 @@ BaseType_t FreeRTOS_IPInit(
     const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
     const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
     const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
+
+/* The following 2 functions also assume that there is only 1 network
+ * endpoint/interface. The new function are called:
+ * FreeRTOS_GetEndPointConfiguration() and FreeRTOS_SetEndPointConfiguration()
+ */
+void FreeRTOS_GetAddressConfiguration( uint32_t * pulIPAddress,
+                                       uint32_t * pulNetMask,
+                                       uint32_t * pulGatewayAddress,
+                                       uint32_t * pulDNSServerAddress );
+
+void FreeRTOS_SetAddressConfiguration( const uint32_t * pulIPAddress,
+                                       const uint32_t * pulNetMask,
+                                       const uint32_t * pulGatewayAddress,
+                                       const uint32_t * pulDNSServerAddress );
+
+void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
+                                     TickType_t uxBlockTimeTicks );
 /* clang-format off */
-/* The following 2 functions also assume that there is only 1 network endpoint/interface.
- * The new function are called: FreeRTOS_GetEndPointConfiguration() and
- * FreeRTOS_SetEndPointConfiguration() */
-    void FreeRTOS_GetAddressConfiguration( uint32_t * pulIPAddress,
-                                           uint32_t * pulNetMask,
-                                           uint32_t * pulGatewayAddress,
-                                           uint32_t * pulDNSServerAddress );
-
-    void FreeRTOS_SetAddressConfiguration( const uint32_t * pulIPAddress,
-                                           const uint32_t * pulNetMask,
-                                           const uint32_t * pulGatewayAddress,
-                                           const uint32_t * pulDNSServerAddress );
-
-    void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
-                                         TickType_t uxBlockTimeTicks );
-
 #endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
 
 /*
