@@ -8,7 +8,8 @@
 #include "FreeRTOS_DNS.h"
 #include "FreeRTOS_IP_Private.h"
 
-/* This assumes that the length of the hostname is bounded by MAX_HOSTNAME_LEN. */
+/* This assumes that the length of the hostname is bounded by MAX_HOSTNAME_LEN.
+ */
 void * safeMalloc( size_t xWantedSize )
 {
     if( xWantedSize == 0 )
@@ -27,7 +28,8 @@ void harness()
     {
         size_t len;
         __CPROVER_assume( len >= 0 && len <= MAX_HOSTNAME_LEN );
-        char * pcHostName = safeMalloc( len ); /* malloc is replaced by safeMalloc */
+        char * pcHostName = safeMalloc( len ); /* malloc is replaced by
+                                                  safeMalloc */
 
         if( len && pcHostName )
         {

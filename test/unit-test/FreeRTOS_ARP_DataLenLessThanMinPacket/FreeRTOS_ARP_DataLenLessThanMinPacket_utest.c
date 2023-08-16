@@ -25,21 +25,22 @@
 
 static uint32_t uInterfaceOut_Called = 0;
 
-BaseType_t xNetworkInterfaceOutput_ARP_Stub( NetworkInterface_t * pxInterface,
-                                             NetworkBufferDescriptor_t * const pxNetworkBuffer,
-                                             BaseType_t bReleaseAfterSend )
+BaseType_t xNetworkInterfaceOutput_ARP_Stub(
+    NetworkInterface_t * pxInterface,
+    NetworkBufferDescriptor_t * const pxNetworkBuffer,
+    BaseType_t bReleaseAfterSend )
 {
     uInterfaceOut_Called = 1;
 
     return pdTRUE_UNSIGNED;
 }
 
-
 void test_FreeRTOS_OutputARPRequest_MinimumPacketSizeLessThanARPPacket( void )
 {
     NetworkEndPoint_t xEndPoint = { 0 };
     NetworkInterface_t xInterface;
-    uint8_t ucBuffer[ sizeof( ARPPacket_t ) + ipBUFFER_PADDING + ipconfigETHERNET_MINIMUM_PACKET_BYTES ];
+    uint8_t ucBuffer[ sizeof( ARPPacket_t ) + ipBUFFER_PADDING +
+                      ipconfigETHERNET_MINIMUM_PACKET_BYTES ];
     NetworkBufferDescriptor_t xNetworkBuffer = { 0 };
     uint32_t ulIPAddress = 0xAAAAAAAA;
 
@@ -56,7 +57,9 @@ void test_FreeRTOS_OutputARPRequest_MinimumPacketSizeLessThanARPPacket( void )
 
     FreeRTOS_FirstEndPoint_ExpectAndReturn( NULL, &xEndPoint );
 
-    pxGetNetworkBufferWithDescriptor_ExpectAndReturn( sizeof( ARPPacket_t ), 0, &xNetworkBuffer );
+    pxGetNetworkBufferWithDescriptor_ExpectAndReturn( sizeof( ARPPacket_t ),
+                                                      0,
+                                                      &xNetworkBuffer );
     xIsCallingFromIPTask_IgnoreAndReturn( pdTRUE );
 
     FreeRTOS_NextEndPoint_ExpectAndReturn( NULL, &xEndPoint, NULL );

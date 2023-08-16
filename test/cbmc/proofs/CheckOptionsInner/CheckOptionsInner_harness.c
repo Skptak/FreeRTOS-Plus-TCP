@@ -21,18 +21,17 @@
 #include "cbmc.h"
 
 /****************************************************************
-* Signature of function under test
-****************************************************************/
+ * Signature of function under test
+ ****************************************************************/
 
-void __CPROVER_file_local_FreeRTOS_TCP_Reception_c_prvReadSackOption( const uint8_t * const pucPtr,
-                                                                      size_t uxIndex,
-                                                                      FreeRTOS_Socket_t * const pxSocket );
+void __CPROVER_file_local_FreeRTOS_TCP_Reception_c_prvReadSackOption(
+    const uint8_t * const pucPtr,
+    size_t uxIndex,
+    FreeRTOS_Socket_t * const pxSocket );
 
 /****************************************************************
-* Proof of prvReadSackOption function contract
-****************************************************************/
-
-
+ * Proof of prvReadSackOption function contract
+ ****************************************************************/
 
 void harness()
 {
@@ -60,7 +59,8 @@ void harness()
         TCPSegment_t * segment = malloc( sizeof( TCPSegment_t ) );
         __CPROVER_assume( segment != NULL );
         listSET_LIST_ITEM_OWNER( &segment->xQueueItem, ( void * ) segment );
-        vListInsertEnd( &pxSocket->u.xTCP.xTCPWindow.xWaitQueue, &segment->xQueueItem );
+        vListInsertEnd( &pxSocket->u.xTCP.xTCPWindow.xWaitQueue,
+                        &segment->xQueueItem );
     }
 
     vListInitialise( &pxSocket->u.xTCP.xTCPWindow.xTxSegments );
@@ -71,7 +71,8 @@ void harness()
         __CPROVER_assume( segment != NULL );
         vListInitialiseItem( &segment->xSegmentItem );
         listSET_LIST_ITEM_OWNER( &segment->xQueueItem, ( void * ) segment );
-        vListInsertEnd( &pxSocket->u.xTCP.xTCPWindow.xTxSegments, &segment->xQueueItem );
+        vListInsertEnd( &pxSocket->u.xTCP.xTCPWindow.xTxSegments,
+                        &segment->xQueueItem );
     }
 
     vListInitialise( &pxSocket->u.xTCP.xTCPWindow.xPriorityQueue );
@@ -81,8 +82,8 @@ void harness()
     vListInitialise( &xSegmentList );
 
     /****************************************************************
-    * Specification and proof of CheckOptions inner loop
-    ****************************************************************/
+     * Specification and proof of CheckOptions inner loop
+     ****************************************************************/
 
     /* Preconditions */
 
@@ -98,7 +99,9 @@ void harness()
     __CPROVER_assume( pucPtr != NULL );
     __CPROVER_assume( pxSocket != NULL );
 
-    __CPROVER_file_local_FreeRTOS_TCP_Reception_c_prvReadSackOption( pucPtr, uxIndex, pxSocket );
+    __CPROVER_file_local_FreeRTOS_TCP_Reception_c_prvReadSackOption( pucPtr,
+                                                                     uxIndex,
+                                                                     pxSocket );
 
     /* No postconditions required */
 }

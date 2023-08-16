@@ -41,17 +41,19 @@
 #include "cbmc.h"
 
 /****************************************************************
-* Signature of the function under test
-****************************************************************/
+ * Signature of the function under test
+ ****************************************************************/
 
-ICMPPrefixOption_IPv6_t * __CPROVER_file_local_FreeRTOS_RA_c_vReceiveRA_ReadReply( const NetworkBufferDescriptor_t * pxNetworkBuffer );
-
+ICMPPrefixOption_IPv6_t * __CPROVER_file_local_FreeRTOS_RA_c_vReceiveRA_ReadReply(
+    const NetworkBufferDescriptor_t * pxNetworkBuffer );
 
 void harness()
 {
-    NetworkBufferDescriptor_t * pxNetworkBuffer = ensure_FreeRTOS_NetworkBuffer_is_allocated();
+    NetworkBufferDescriptor_t *
+        pxNetworkBuffer = ensure_FreeRTOS_NetworkBuffer_is_allocated();
     uint8_t * pucBytes;
-    size_t uxNeededSize = ipSIZE_OF_ETH_HEADER + ipSIZE_OF_IPv6_HEADER + sizeof( ICMPRouterAdvertisement_IPv6_t );
+    size_t uxNeededSize = ipSIZE_OF_ETH_HEADER + ipSIZE_OF_IPv6_HEADER +
+                          sizeof( ICMPRouterAdvertisement_IPv6_t );
     size_t uxDataLen = 8;
     ICMPPrefixOption_IPv6_t * pxReturn;
 
@@ -66,5 +68,6 @@ void harness()
     pxNetworkBuffer->pxInterface = safeMalloc( sizeof( NetworkInterface_t ) );
     __CPROVER_assume( pxNetworkBuffer->pxInterface != NULL );
 
-    pxReturn = __CPROVER_file_local_FreeRTOS_RA_c_vReceiveRA_ReadReply( pxNetworkBuffer );
+    pxReturn = __CPROVER_file_local_FreeRTOS_RA_c_vReceiveRA_ReadReply(
+        pxNetworkBuffer );
 }

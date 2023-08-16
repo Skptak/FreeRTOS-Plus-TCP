@@ -6,7 +6,6 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_ARP.h"
 
-
 void harness()
 {
     vARPSendGratuitous();

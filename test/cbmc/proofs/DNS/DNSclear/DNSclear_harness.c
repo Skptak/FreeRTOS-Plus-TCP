@@ -9,7 +9,6 @@
 
 void FreeRTOS_dnsclear( void );
 
-
 void harness()
 {
     if( ipconfigUSE_DNS_CACHE != 0 )

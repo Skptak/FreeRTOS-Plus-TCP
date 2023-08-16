@@ -22,15 +22,14 @@
 #include "cbmc.h"
 
 /****************************************************************
-* Signature of function under test
-****************************************************************/
+ * Signature of function under test
+ ****************************************************************/
 
-size_t DNS_SkipNameField( const uint8_t * pucByte,
-                          size_t uxLength );
+size_t DNS_SkipNameField( const uint8_t * pucByte, size_t uxLength );
 
 /****************************************************************
-* Proof of DNS_SkipNameField function contract
-****************************************************************/
+ * Proof of DNS_SkipNameField function contract
+ ****************************************************************/
 
 void harness()
 {

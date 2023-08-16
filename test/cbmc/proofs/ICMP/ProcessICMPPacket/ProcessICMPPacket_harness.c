@@ -41,8 +41,9 @@
 #include "cbmc.h"
 
 /* prvProcessICMPEchoRequest() is proved separately */
-eFrameProcessingResult_t __CPROVER_file_local_FreeRTOS_ICMP_c_prvProcessICMPEchoRequest( ICMPPacket_t * const pxICMPPacket,
-                                                                                         const NetworkBufferDescriptor_t * const pxNetworkBuffer )
+eFrameProcessingResult_t __CPROVER_file_local_FreeRTOS_ICMP_c_prvProcessICMPEchoRequest(
+    ICMPPacket_t * const pxICMPPacket,
+    const NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
     eFrameProcessingResult_t eReturn;
 
