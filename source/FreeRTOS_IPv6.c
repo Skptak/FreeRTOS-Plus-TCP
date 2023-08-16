@@ -228,7 +228,7 @@ static BaseType_t xCheckIPv6SizeFields( const void * const pvEthernetBuffer,
 }
 
     #endif /* ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 ) */
-/*-----------------------------------------------------------*/
+           /*-----------------------------------------------------------*/
 
     #if( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 )
 

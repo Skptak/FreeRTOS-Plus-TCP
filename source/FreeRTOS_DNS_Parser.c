@@ -1395,8 +1395,11 @@ void DNS_TreatNBNS( uint8_t * pucPayload,
             pucUDPPayloadBuffer[ offsetof( NBNSRequest_t, usType ) ] ) );
 
         vSetField16( pxAnswer, NBNSAnswer_t, usType, usType ); /* Type */
-        vSetField16( pxAnswer, NBNSAnswer_t, usClass, dnsNBNS_CLASS_IN ); /* Class
-                                                                           */
+        vSetField16( pxAnswer,
+                     NBNSAnswer_t,
+                     usClass,
+                     dnsNBNS_CLASS_IN ); /* Class
+                                          */
         vSetField32( pxAnswer, NBNSAnswer_t, ulTTL, dnsNBNS_TTL_VALUE );
         vSetField16( pxAnswer,
                      NBNSAnswer_t,

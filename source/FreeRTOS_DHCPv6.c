@@ -1146,12 +1146,13 @@ static void prvSendDHCPMessage( NetworkEndPoint_t * pxEndPoint )
                 pxDHCPMessage->xClientID.usHardwareType = 1U;
 
                 /* DHCPv6_Option_Client_Identifier */
-                vBitConfig_write_16( &( xMessage ),
-                                     DHCPv6_Option_Client_Identifier ); /* Option
-                                                                           is 1:
-                                                                           Client
-                                                                           Identifier
-                                                                         */
+                vBitConfig_write_16(
+                    &( xMessage ),
+                    DHCPv6_Option_Client_Identifier );     /* Option
+                                                              is 1:
+                                                              Client
+                                                              Identifier
+                                                            */
                 vBitConfig_write_16( &( xMessage ), 14U ); /* The length is 14
                                                             */
                 vBitConfig_write_16( &( xMessage ),
@@ -1213,14 +1214,15 @@ static void prvSendDHCPMessage( NetworkEndPoint_t * pxEndPoint )
                                                                          is 6 */
                     vBitConfig_write_16( &( xMessage ), 4U ); /* usLength;
                                                                  length is 4 */
-                    vBitConfig_write_16( &( xMessage ),
-                                         DHCP6_OPTION_REQUEST_DNS ); /* usOption_1;
-                                                                        00 17 :
-                                                                        DNS
-                                                                        Recursive
-                                                                        name
-                                                                        server.
-                                                                      */
+                    vBitConfig_write_16(
+                        &( xMessage ),
+                        DHCP6_OPTION_REQUEST_DNS ); /* usOption_1;
+                                                       00 17 :
+                                                       DNS
+                                                       Recursive
+                                                       name
+                                                       server.
+                                                     */
                     vBitConfig_write_16(
                         &( xMessage ),
                         DHCP6_OPTION_REQUEST_DOMAIN_SEARCH_LIST ); /* usOption_2;
@@ -1270,8 +1272,9 @@ static void prvSendDHCPMessage( NetworkEndPoint_t * pxEndPoint )
                                                                  */
                 vBitConfig_write_16( &( xMessage ), 25 ); /* usLength   length
                                                              is 25 */
-                vBitConfig_write_32( &( xMessage ), ulPreferredLifeTime ); /* 4500
-                                                                            */
+                vBitConfig_write_32( &( xMessage ),
+                                     ulPreferredLifeTime ); /* 4500
+                                                             */
                 vBitConfig_write_32( &( xMessage ),
                                      ulPValidLifeTime ); /* e.g. 7200 seconds.
                                                           */
@@ -1282,17 +1285,19 @@ static void prvSendDHCPMessage( NetworkEndPoint_t * pxEndPoint )
                                      ipSIZE_OF_IPv6_ADDRESS ); /* 2001:0:0:fe00::
                                                                 */
 
-                vBitConfig_write_16( &( xMessage ),
-                                     DHCPv6_Option_NonTemporaryAddress ); /* usOption
-                                                                             Option
-                                                                             is
-                                                                             3
-                                                                           */
+                vBitConfig_write_16(
+                    &( xMessage ),
+                    DHCPv6_Option_NonTemporaryAddress );  /* usOption
+                                                             Option
+                                                             is
+                                                             3
+                                                           */
                 vBitConfig_write_16( &( xMessage ), 12 ); /* usLength   length
                                                              is 12 */
                 vBitConfig_write_32( &( xMessage ), ulIAID ); /* 27 fe 8f 95. */
-                vBitConfig_write_32( &( xMessage ), ulPreferredLifeTime ); /* 4500
-                                                                            */
+                vBitConfig_write_32( &( xMessage ),
+                                     ulPreferredLifeTime );             /* 4500
+                                                                         */
                 vBitConfig_write_32( &( xMessage ), ulPValidLifeTime ); /* 7200
                                                                          */
 

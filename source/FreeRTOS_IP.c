@@ -2149,8 +2149,9 @@ static eFrameProcessingResult_t prvProcessIPPacket(
                      * useless broadcast packets. */
                     /* Case default is never toggled because eReturn is not
                      * eProcessBuffer in previous step. */
-                    switch( pxIPPacket->xEthernetHeader.usFrameType ) /* LCOV_EXCL_BR_LINE
-                                                                       */
+                    switch( pxIPPacket->xEthernetHeader
+                                .usFrameType ) /* LCOV_EXCL_BR_LINE
+                                                */
                     {
 #if( ipconfigUSE_IPv6 != 0 )
                         case ipIPv6_FRAME_TYPE:
@@ -2361,11 +2362,11 @@ void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer,
 
         if( pxNetworkBuffer->pxEndPoint != NULL )
         {
-            NetworkInterface_t *
-                pxInterface = pxNetworkBuffer->pxEndPoint
-                                  ->pxNetworkInterface; /*_RB_ Why not use the
-                                                           pxNetworkBuffer->pxNetworkInterface
-                                                           directly? */
+            NetworkInterface_t * pxInterface =
+                pxNetworkBuffer->pxEndPoint
+                    ->pxNetworkInterface; /*_RB_ Why not use the
+                                             pxNetworkBuffer->pxNetworkInterface
+                                             directly? */
 
             /* Interpret the Ethernet packet being sent. */
             switch( pxIPPacket->xEthernetHeader.usFrameType )

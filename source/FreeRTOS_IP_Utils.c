@@ -1169,8 +1169,9 @@ uint16_t usGenerateProtocolChecksum( uint8_t * pucEthernetBuffer,
         /* coverity[misra_c_2012_rule_11_3_violation] */
         xSet.pxIPPacket = ( ( const IPPacket_t * ) pucEthernetBuffer );
 
-        switch( xSet.pxIPPacket->xEthernetHeader.usFrameType ) /* LCOV_EXCL_BR_LINE
-                                                                */
+        switch(
+            xSet.pxIPPacket->xEthernetHeader.usFrameType ) /* LCOV_EXCL_BR_LINE
+                                                            */
         {
 #if( ipconfigUSE_IPv4 != 0 )
             case ipIPv4_FRAME_TYPE:

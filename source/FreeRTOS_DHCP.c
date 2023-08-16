@@ -1838,8 +1838,9 @@ static BaseType_t prvSendDHCPDiscover( NetworkEndPoint_t * pxEndPoint )
             /* Exclude this line from branch coverage as the not-taken condition
              * will never happen unless the code is modified */
             configASSERT( uxOptionsLength >
-                          ( dhcpOPTION_50_OFFSET + dhcpOPTION_50_SIZE ) ); /* LCOV_EXCL_BR_LINE
-                                                                            */
+                          ( dhcpOPTION_50_OFFSET +
+                            dhcpOPTION_50_SIZE ) ); /* LCOV_EXCL_BR_LINE
+                                                     */
             uxCopyLength = uxOptionsLength -
                            ( dhcpOPTION_50_OFFSET + dhcpOPTION_50_SIZE );
             pvCopySource = &(
