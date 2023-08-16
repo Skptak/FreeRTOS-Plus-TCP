@@ -506,13 +506,16 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
     #define FOnTcpSent                 FOnTCPSent_t
 #endif /* ipconfigENABLE_BACKWARD_COMPATIBILITY */
 
-/* clang-format off */
-#if ( ipconfigHAS_PRINTF != 0 )
-    extern void vPrintResourceStats( void );
+#if( ipconfigHAS_PRINTF != 0 )
+extern void vPrintResourceStats( void );
 #else
-    #define vPrintResourceStats()    do {} while( ipFALSE_BOOL )     /**< ipconfigHAS_PRINTF is not defined. Define vPrintResourceStats to a do-while( 0 ). */
+    /**< ipconfigHAS_PRINTF is not defined.
+     * Define vPrintResourceStats to a do-while( 0 ). */
+    /* clang-format off */
+    #define vPrintResourceStats()    do {} while( ipFALSE_BOOL )
+    /* clang-format on */
 #endif
-/* clang-format on */
+
 #if( ipconfigUSE_TCP != 0 )
 
 /** @brief Set to a non-zero value if one or more TCP message have been
