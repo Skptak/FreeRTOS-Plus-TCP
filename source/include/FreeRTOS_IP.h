@@ -260,34 +260,27 @@ typedef struct xIP_TIMER
     #define FreeRTOS_htonl( x )    ( ( uint32_t ) ( x ) )
 
 #endif /* ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN */
-
-#define FreeRTOS_ntohs( x )    FreeRTOS_htons( x )
-#define FreeRTOS_ntohl( x )    FreeRTOS_htonl( x )
+/* clang-format on */
+#define FreeRTOS_ntohs( x ) FreeRTOS_htons( x )
+#define FreeRTOS_ntohl( x ) FreeRTOS_htonl( x )
 
 /* Some simple helper functions. */
-int32_t FreeRTOS_max_int32( int32_t a,
-                            int32_t b );
+int32_t FreeRTOS_max_int32( int32_t a, int32_t b );
 
-uint32_t FreeRTOS_max_uint32( uint32_t a,
-                              uint32_t b );
+uint32_t FreeRTOS_max_uint32( uint32_t a, uint32_t b );
 
-size_t FreeRTOS_max_size_t( size_t a,
-                            size_t b );
+size_t FreeRTOS_max_size_t( size_t a, size_t b );
 
-int32_t FreeRTOS_min_int32( int32_t a,
-                            int32_t b );
+int32_t FreeRTOS_min_int32( int32_t a, int32_t b );
 
-uint32_t FreeRTOS_min_uint32( uint32_t a,
-                              uint32_t b );
+uint32_t FreeRTOS_min_uint32( uint32_t a, uint32_t b );
 
-size_t FreeRTOS_min_size_t( size_t a,
-                            size_t b );
+size_t FreeRTOS_min_size_t( size_t a, size_t b );
 
-uint32_t FreeRTOS_round_up( uint32_t a,
-                            uint32_t d );
-uint32_t FreeRTOS_round_down( uint32_t a,
-                              uint32_t d );
+uint32_t FreeRTOS_round_up( uint32_t a, uint32_t d );
+uint32_t FreeRTOS_round_down( uint32_t a, uint32_t d );
 
+/* clang-format off */
 #define ipMS_TO_MIN_TICKS( xTimeInMs )    ( ( pdMS_TO_TICKS( ( xTimeInMs ) ) < ( ( TickType_t ) 1U ) ) ? ( ( TickType_t ) 1U ) : pdMS_TO_TICKS( ( xTimeInMs ) ) )
 
 /* For backward compatibility. */
