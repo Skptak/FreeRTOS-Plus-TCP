@@ -325,13 +325,15 @@ BaseType_t FreeRTOS_IPInit_Multi( void );
 struct xNetworkInterface;
 /* clang-format off */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
-
-/* Do not call the following function directly. It is there for downward compatibility.
- * The function FreeRTOS_IPInit() will call it to initialise the interface and end-point
- * objects.  See the description in FreeRTOS_Routing.h. */
-    struct xNetworkInterface * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                          struct xNetworkInterface * pxInterface );
-
+/* clang-format on */
+/* Do not call the following function directly. It is there for downward
+ * compatibility. The function FreeRTOS_IPInit() will call it to initialise the
+ * interface and end-point objects.  See the description in FreeRTOS_Routing.h.
+ */
+struct xNetworkInterface * pxFillInterfaceDescriptor(
+    BaseType_t xEMACIndex,
+    struct xNetworkInterface * pxInterface );
+/* clang-format off */
 /* The following function is only provided to allow backward compatibility
  * with the earlier version of FreeRTOS+TCP which had a single interface only. */
     BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
