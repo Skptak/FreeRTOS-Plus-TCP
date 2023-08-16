@@ -395,64 +395,68 @@ BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress,
                                      TickType_t uxBlockTimeTicks );
 
 void FreeRTOS_ReleaseUDPPayloadBuffer( void const * pvBuffer );
+
 const uint8_t * FreeRTOS_GetMACAddress( void );
+
 void FreeRTOS_UpdateMACAddress(
     const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
-#if( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
+
+/* clang-format off */
+#if ( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
     /* This function shall be defined by the application. */
-    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && \
-        ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+        void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
     #else
-void vApplicationIPNetworkEventHook_Multi(
-    eIPCallbackEvent_t eNetworkEvent,
-    struct xNetworkEndPoint * pxEndPoint );
+        void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
+                                                   struct xNetworkEndPoint * pxEndPoint );
     #endif
 #endif
-#if( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
-void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
-                                uint16_t usIdentifier );
+#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+    void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
+                                    uint16_t usIdentifier );
 #endif
 
 /* xARPWaitResolution checks if an IPv4 address is already known. If not
  * it may send an ARP request and wait for a reply.  This function will
  * only be called from an application. */
-BaseType_t xARPWaitResolution( uint32_t ulIPAddress, TickType_t uxTicksToWait );
+BaseType_t xARPWaitResolution( uint32_t ulIPAddress,
+                               TickType_t uxTicksToWait );
 
 BaseType_t FreeRTOS_IsNetworkUp( void );
 
-#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-UBaseType_t uxGetMinimumIPQueueSpace( void );
+#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+    UBaseType_t uxGetMinimumIPQueueSpace( void );
 #endif
 
 BaseType_t xIsNetworkDownEventPending( void );
 
 /*
  * Defined in FreeRTOS_Sockets.c
- * //_RB_ Don't think this comment is correct.  If this is for internal use only
- * it should appear after all the public API functions and not start with
- * FreeRTOS_. Socket has had activity, reset the timer so it will not be closed
+ * //_RB_ Don't think this comment is correct.  If this is for internal use only it should appear after all the public API functions and not start with FreeRTOS_.
+ * Socket has had activity, reset the timer so it will not be closed
  * because of inactivity
  */
-#if( ( ipconfigHAS_DEBUG_PRINTF != 0 ) || ( ipconfigHAS_PRINTF != 0 ) )
-const char * FreeRTOS_GetTCPStateName( UBaseType_t ulState );
+#if ( ( ipconfigHAS_DEBUG_PRINTF != 0 ) || ( ipconfigHAS_PRINTF != 0 ) )
+    const char * FreeRTOS_GetTCPStateName( UBaseType_t ulState );
 #endif
 
-#if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
+#if ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
 /* DHCP has an option for clients to register their hostname.  It doesn't
  * have much use, except that a device can be found in a router along with its
  * name. If this option is used the callback below must be provided by the
  * application writer to return a const string, denoting the device's name. */
 /* Typically this function is defined in a user module. */
-const char * pcApplicationHostnameHook( void );
+    const char * pcApplicationHostnameHook( void );
 
 #endif /* ipconfigDHCP_REGISTER_HOSTNAME */
 
+
 /* This xApplicationGetRandomNumber() will set *pulNumber to a random number,
- * and return pdTRUE. When the random number generator is broken, it shall
- * return pdFALSE. The function is defined in 'iot_secure_sockets.c'. If that
- * module is not included in the project, the application must provide an
+ * and return pdTRUE. When the random number generator is broken, it shall return
+ * pdFALSE.
+ * The function is defined in 'iot_secure_sockets.c'.
+ * If that module is not included in the project, the application must provide an
  * implementation of it.
  * The macro's ipconfigRAND32() and configRAND32() are not in use anymore. */
 
@@ -460,12 +464,11 @@ const char * pcApplicationHostnameHook( void );
  * be defined in a user module. */
 BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber );
 
-/** @brief The pointer to buffer with packet waiting for ARP resolution. This
- * variable is defined in FreeRTOS_IP.c. This pointer is for internal use only.
- */
+/** @brief The pointer to buffer with packet waiting for ARP resolution. This variable
+ *  is defined in FreeRTOS_IP.c.
+ *  This pointer is for internal use only. */
 extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
 
-/* clang-format off */
 /* For backward compatibility define old structure names to the newer equivalent
  * structure name. */
 #ifndef ipconfigENABLE_BACKWARD_COMPATIBILITY
