@@ -4,22 +4,23 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  * http://aws.amazon.com/freertos
  * http://www.FreeRTOS.org
@@ -39,70 +40,71 @@
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    extern "C" {
+extern "C" {
 #endif
 /* *INDENT-ON* */
 
 /* Constants defining the current version of the FreeRTOS+TCP
  * network stack. */
-#define ipFR_TCP_VERSION_NUMBER      "V4.0.999"
-#define ipFR_TCP_VERSION_MAJOR       4
-#define ipFR_TCP_VERSION_MINOR       0
+#define ipFR_TCP_VERSION_NUMBER   "V4.0.999"
+#define ipFR_TCP_VERSION_MAJOR    4
+#define ipFR_TCP_VERSION_MINOR    0
 /* Development builds are always version 999. */
-#define ipFR_TCP_VERSION_BUILD       999
+#define ipFR_TCP_VERSION_BUILD    999
 /* Using TCP version to support backward compatibility in the Demo files. */
-#define FREERTOS_PLUS_TCP_VERSION    10
+#define FREERTOS_PLUS_TCP_VERSION 10
 
 /* Some constants defining the sizes of several parts of a packet.
  * These defines come before including the configuration header files. */
 
 /* The size of the Ethernet header is 14, meaning that 802.1Q VLAN tags
  * are not ( yet ) supported. */
-#define ipSIZE_OF_ETH_HEADER     14U
-#define ipSIZE_OF_IGMP_HEADER    8U
-#define ipSIZE_OF_UDP_HEADER     8U
-#define ipSIZE_OF_TCP_HEADER     20U
-
+#define ipSIZE_OF_ETH_HEADER      14U
+#define ipSIZE_OF_IGMP_HEADER     8U
+#define ipSIZE_OF_UDP_HEADER      8U
+#define ipSIZE_OF_TCP_HEADER      20U
 
 /*
  * Generate a randomized TCP Initial Sequence Number per RFC.
  * This function must be provided by the application builder.
  */
 /* This function is defined generally by the application. */
-extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
-                                                    uint16_t usSourcePort,
-                                                    uint32_t ulDestinationAddress,
-                                                    uint16_t usDestinationPort );
+extern uint32_t ulApplicationGetNextSequenceNumber(
+    uint32_t ulSourceAddress,
+    uint16_t usSourcePort,
+    uint32_t ulDestinationAddress,
+    uint16_t usDestinationPort );
 
 /* The number of octets in the MAC and IP addresses respectively. */
-#define ipMAC_ADDRESS_LENGTH_BYTES                 ( 6U )
-#define ipIP_ADDRESS_LENGTH_BYTES                  ( 4U )
+#define ipMAC_ADDRESS_LENGTH_BYTES              ( 6U )
+#define ipIP_ADDRESS_LENGTH_BYTES               ( 4U )
 
 /* IP protocol definitions. */
-#define ipPROTOCOL_ICMP                            ( 1U )
-#define ipPROTOCOL_IGMP                            ( 2U )
-#define ipPROTOCOL_TCP                             ( 6U )
-#define ipPROTOCOL_UDP                             ( 17U )
+#define ipPROTOCOL_ICMP                         ( 1U )
+#define ipPROTOCOL_IGMP                         ( 2U )
+#define ipPROTOCOL_TCP                          ( 6U )
+#define ipPROTOCOL_UDP                          ( 17U )
 
 /* The character used to fill ICMP echo requests, and therefore also the
  * character expected to fill ICMP echo replies. */
-#define ipECHO_DATA_FILL_BYTE                      'x'
+#define ipECHO_DATA_FILL_BYTE                   'x'
 
 /* Dimensions the buffers that are filled by received Ethernet frames. */
-#define ipSIZE_OF_ETH_CRC_BYTES                    ( 4UL )
-#define ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES    ( 4UL )
-#define ipTOTAL_ETHERNET_FRAME_SIZE                ( ( ( uint32_t ) ipconfigNETWORK_MTU ) + ( ( uint32_t ) ipSIZE_OF_ETH_HEADER ) + ipSIZE_OF_ETH_CRC_BYTES + ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES )
-
+#define ipSIZE_OF_ETH_CRC_BYTES                 ( 4UL )
+#define ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES ( 4UL )
+#define ipTOTAL_ETHERNET_FRAME_SIZE                                     \
+    ( ( ( uint32_t ) ipconfigNETWORK_MTU ) +                            \
+      ( ( uint32_t ) ipSIZE_OF_ETH_HEADER ) + ipSIZE_OF_ETH_CRC_BYTES + \
+      ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES )
 
 /* Space left at the beginning of a network buffer storage area to store a
- * pointer back to the network buffer.  Should be a multiple of 8 to ensure 8 byte
- * alignment is maintained on architectures that require it.
+ * pointer back to the network buffer.  Should be a multiple of 8 to ensure 8
+ * byte alignment is maintained on architectures that require it.
  *
  * In order to get a 32-bit alignment of network packets, an offset of 2 bytes
- * would be desirable, as defined by ipconfigPACKET_FILLER_SIZE.  So the malloc'd
- * buffer will have the following contents:
- *  uint32_t pointer;   // word-aligned
- *  uchar_8 filler[6];
+ * would be desirable, as defined by ipconfigPACKET_FILLER_SIZE.  So the
+ * malloc'd buffer will have the following contents: uint32_t pointer;   //
+ * word-aligned uchar_8 filler[6];
  *  << ETH-header >>    // half-word-aligned
  *  uchar_8 dest[6];    // start of pucEthernetBuffer
  *  uchar_8 dest[6];
@@ -112,12 +114,13 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
  *  etc
  */
 
-#if ( ipconfigBUFFER_PADDING != 0 )
-    #define ipBUFFER_PADDING    ipconfigBUFFER_PADDING
+#if( ipconfigBUFFER_PADDING != 0 )
+    #define ipBUFFER_PADDING ipconfigBUFFER_PADDING
 #else
-    #define ipBUFFER_PADDING    ( 8U + ipconfigPACKET_FILLER_SIZE )
+    #define ipBUFFER_PADDING ( 8U + ipconfigPACKET_FILLER_SIZE )
 #endif
 
+/* clang-format off */
 /* The offset of ucTCPFlags within the TCP header. */
 #define ipTCP_FLAGS_OFFSET      13U
 
@@ -504,5 +507,7 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
     } /* extern "C" */
 #endif
 /* *INDENT-ON* */
+
+/* clang-format on */
 
 #endif /* FREERTOS_IP_H */
