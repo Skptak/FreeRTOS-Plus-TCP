@@ -217,21 +217,20 @@ typedef enum ePING_REPLY_STATUS
     eInvalidData /**< A reply was received to an outgoing ping but the payload
                     of the reply was not correct. */
 } ePingReplyStatus_t;
-/* clang-format off */
+
 /**
  * The software timer struct for various IP functions
  */
 typedef struct xIP_TIMER
 {
-    uint32_t
-        bActive : 1,            /**< This timer is running and must be processed. */
-        bExpired : 1;           /**< Timer has expired and a task must be processed. */
-    TimeOut_t xTimeOut;         /**< The timeout value. */
+    uint32_t bActive : 1, /**< This timer is running and must be processed. */
+        bExpired : 1;   /**< Timer has expired and a task must be processed. */
+    TimeOut_t xTimeOut; /**< The timeout value. */
     TickType_t ulRemainingTime; /**< The amount of time remaining. */
     TickType_t ulReloadTime;    /**< The value of reload time. */
 } IPTimer_t;
 
-
+/* clang-format off */
 /* Endian related definitions. */
 #if ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
 
@@ -260,61 +259,56 @@ typedef struct xIP_TIMER
     #define FreeRTOS_htonl( x )    ( ( uint32_t ) ( x ) )
 
 #endif /* ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN */
-
-#define FreeRTOS_ntohs( x )    FreeRTOS_htons( x )
-#define FreeRTOS_ntohl( x )    FreeRTOS_htonl( x )
+/* clang-format on */
+#define FreeRTOS_ntohs( x ) FreeRTOS_htons( x )
+#define FreeRTOS_ntohl( x ) FreeRTOS_htonl( x )
 
 /* Some simple helper functions. */
-int32_t FreeRTOS_max_int32( int32_t a,
-                            int32_t b );
+int32_t FreeRTOS_max_int32( int32_t a, int32_t b );
 
-uint32_t FreeRTOS_max_uint32( uint32_t a,
-                              uint32_t b );
+uint32_t FreeRTOS_max_uint32( uint32_t a, uint32_t b );
 
-size_t FreeRTOS_max_size_t( size_t a,
-                            size_t b );
+size_t FreeRTOS_max_size_t( size_t a, size_t b );
 
-int32_t FreeRTOS_min_int32( int32_t a,
-                            int32_t b );
+int32_t FreeRTOS_min_int32( int32_t a, int32_t b );
 
-uint32_t FreeRTOS_min_uint32( uint32_t a,
-                              uint32_t b );
+uint32_t FreeRTOS_min_uint32( uint32_t a, uint32_t b );
 
-size_t FreeRTOS_min_size_t( size_t a,
-                            size_t b );
+size_t FreeRTOS_min_size_t( size_t a, size_t b );
 
-uint32_t FreeRTOS_round_up( uint32_t a,
-                            uint32_t d );
-uint32_t FreeRTOS_round_down( uint32_t a,
-                              uint32_t d );
+uint32_t FreeRTOS_round_up( uint32_t a, uint32_t d );
+uint32_t FreeRTOS_round_down( uint32_t a, uint32_t d );
 
-#define ipMS_TO_MIN_TICKS( xTimeInMs )    ( ( pdMS_TO_TICKS( ( xTimeInMs ) ) < ( ( TickType_t ) 1U ) ) ? ( ( TickType_t ) 1U ) : pdMS_TO_TICKS( ( xTimeInMs ) ) )
+#define ipMS_TO_MIN_TICKS( xTimeInMs )                           \
+    ( ( pdMS_TO_TICKS( ( xTimeInMs ) ) < ( ( TickType_t ) 1U ) ) \
+          ? ( ( TickType_t ) 1U )                                \
+          : pdMS_TO_TICKS( ( xTimeInMs ) ) )
 
 /* For backward compatibility. */
-#define pdMS_TO_MIN_TICKS( xTimeInMs )    ipMS_TO_MIN_TICKS( xTimeInMs )
+#define pdMS_TO_MIN_TICKS( xTimeInMs ) ipMS_TO_MIN_TICKS( xTimeInMs )
 
 #ifndef pdTRUE_SIGNED
-    #define pdTRUE_SIGNED    pdTRUE
+    #define pdTRUE_SIGNED pdTRUE
 #endif /* pdTRUE_SIGNED */
 
 #ifndef pdFALSE_SIGNED
-    #define pdFALSE_SIGNED    pdFALSE
+    #define pdFALSE_SIGNED pdFALSE
 #endif /* pdFALSE_SIGNED */
 
 #ifndef pdTRUE_UNSIGNED
-    #define pdTRUE_UNSIGNED    ( 1U )
+    #define pdTRUE_UNSIGNED ( 1U )
 #endif /* pdTRUE_UNSIGNED */
 
 #ifndef pdFALSE_UNSIGNED
-    #define pdFALSE_UNSIGNED    ( 0U )
+    #define pdFALSE_UNSIGNED ( 0U )
 #endif /* pdFALSE_UNSIGNED */
 
 #ifndef ipTRUE_BOOL
-    #define ipTRUE_BOOL    ( 1 == 1 )
+    #define ipTRUE_BOOL ( 1 == 1 )
 #endif /* ipTRUE_BOOL */
 
 #ifndef ipFALSE_BOOL
-    #define ipFALSE_BOOL    ( 1 == 2 )
+    #define ipFALSE_BOOL ( 1 == 2 )
 #endif /* ipFALSE_BOOL */
 
 /*
@@ -330,50 +324,58 @@ BaseType_t FreeRTOS_IPInit_Multi( void );
 
 struct xNetworkInterface;
 
-#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+#if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && \
+    ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
 
-/* Do not call the following function directly. It is there for downward compatibility.
- * The function FreeRTOS_IPInit() will call it to initialise the interface and end-point
- * objects.  See the description in FreeRTOS_Routing.h. */
-    struct xNetworkInterface * pxFillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                          struct xNetworkInterface * pxInterface );
+/* Do not call the following function directly. It is there for downward
+ * compatibility. The function FreeRTOS_IPInit() will call it to initialise the
+ * interface and end-point objects.  See the description in FreeRTOS_Routing.h.
+ */
+struct xNetworkInterface * pxFillInterfaceDescriptor(
+    BaseType_t xEMACIndex,
+    struct xNetworkInterface * pxInterface );
 
 /* The following function is only provided to allow backward compatibility
- * with the earlier version of FreeRTOS+TCP which had a single interface only. */
-    BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-                                const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ],
-                                const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-                                const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-                                const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
+ * with the earlier version of FreeRTOS+TCP which had a single interface only.
+ */
+BaseType_t FreeRTOS_IPInit(
+    const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
+    const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ],
+    const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
+    const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
+    const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
 
-/* The following 2 functions also assume that there is only 1 network endpoint/interface.
- * The new function are called: FreeRTOS_GetEndPointConfiguration() and
- * FreeRTOS_SetEndPointConfiguration() */
-    void FreeRTOS_GetAddressConfiguration( uint32_t * pulIPAddress,
-                                           uint32_t * pulNetMask,
-                                           uint32_t * pulGatewayAddress,
-                                           uint32_t * pulDNSServerAddress );
+/* The following 2 functions also assume that there is only 1 network
+ * endpoint/interface. The new function are called:
+ * FreeRTOS_GetEndPointConfiguration() and FreeRTOS_SetEndPointConfiguration()
+ */
+void FreeRTOS_GetAddressConfiguration( uint32_t * pulIPAddress,
+                                       uint32_t * pulNetMask,
+                                       uint32_t * pulGatewayAddress,
+                                       uint32_t * pulDNSServerAddress );
 
-    void FreeRTOS_SetAddressConfiguration( const uint32_t * pulIPAddress,
-                                           const uint32_t * pulNetMask,
-                                           const uint32_t * pulGatewayAddress,
-                                           const uint32_t * pulDNSServerAddress );
+void FreeRTOS_SetAddressConfiguration( const uint32_t * pulIPAddress,
+                                       const uint32_t * pulNetMask,
+                                       const uint32_t * pulGatewayAddress,
+                                       const uint32_t * pulDNSServerAddress );
 
-    void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
-                                         TickType_t uxBlockTimeTicks );
+void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes,
+                                     TickType_t uxBlockTimeTicks );
 
-#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
+#endif /* if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( \
+          ipconfigIPv4_BACKWARD_COMPATIBLE == 1 ) */
 
 /*
  * Returns the addresses stored in an end-point structure.
  * This function already existed in the release with the single-interface.
  * Only the first parameters is new: an end-point
  */
-void FreeRTOS_GetEndPointConfiguration( uint32_t * pulIPAddress,
-                                        uint32_t * pulNetMask,
-                                        uint32_t * pulGatewayAddress,
-                                        uint32_t * pulDNSServerAddress,
-                                        const struct xNetworkEndPoint * pxEndPoint );
+void FreeRTOS_GetEndPointConfiguration(
+    uint32_t * pulIPAddress,
+    uint32_t * pulNetMask,
+    uint32_t * pulGatewayAddress,
+    uint32_t * pulDNSServerAddress,
+    const struct xNetworkEndPoint * pxEndPoint );
 
 void FreeRTOS_SetEndPointConfiguration( const uint32_t * pulIPAddress,
                                         const uint32_t * pulNetMask,
@@ -387,70 +389,72 @@ void * FreeRTOS_GetUDPPayloadBuffer_Multi( size_t uxRequestedSizeBytes,
                                            TickType_t uxBlockTimeTicks,
                                            uint8_t ucIPType );
 
-/* MISRA defining 'FreeRTOS_SendPingRequest' should be dependent on 'ipconfigSUPPORT_OUTGOING_PINGS'.
- * In order not to break some existing project, define it unconditionally. */
+/* MISRA defining 'FreeRTOS_SendPingRequest' should be dependent on
+ * 'ipconfigSUPPORT_OUTGOING_PINGS'. In order not to break some existing
+ * project, define it unconditionally. */
 BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress,
                                      size_t uxNumberOfBytesToSend,
                                      TickType_t uxBlockTimeTicks );
 
 void FreeRTOS_ReleaseUDPPayloadBuffer( void const * pvBuffer );
 const uint8_t * FreeRTOS_GetMACAddress( void );
-void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
-#if ( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
+void FreeRTOS_UpdateMACAddress(
+    const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
+#if( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
     /* This function shall be defined by the application. */
-    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
-        void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
+    #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && \
+        ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
+void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
     #else
-        void vApplicationIPNetworkEventHook_Multi( eIPCallbackEvent_t eNetworkEvent,
-                                                   struct xNetworkEndPoint * pxEndPoint );
+void vApplicationIPNetworkEventHook_Multi(
+    eIPCallbackEvent_t eNetworkEvent,
+    struct xNetworkEndPoint * pxEndPoint );
     #endif
 #endif
-#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
-    void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
-                                    uint16_t usIdentifier );
+#if( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+void vApplicationPingReplyHook( ePingReplyStatus_t eStatus,
+                                uint16_t usIdentifier );
 #endif
 
 /* xARPWaitResolution checks if an IPv4 address is already known. If not
  * it may send an ARP request and wait for a reply.  This function will
  * only be called from an application. */
-BaseType_t xARPWaitResolution( uint32_t ulIPAddress,
-                               TickType_t uxTicksToWait );
+BaseType_t xARPWaitResolution( uint32_t ulIPAddress, TickType_t uxTicksToWait );
 
 BaseType_t FreeRTOS_IsNetworkUp( void );
 
-#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-    UBaseType_t uxGetMinimumIPQueueSpace( void );
+#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+UBaseType_t uxGetMinimumIPQueueSpace( void );
 #endif
 
 BaseType_t xIsNetworkDownEventPending( void );
 
 /*
  * Defined in FreeRTOS_Sockets.c
- * //_RB_ Don't think this comment is correct.  If this is for internal use only it should appear after all the public API functions and not start with FreeRTOS_.
- * Socket has had activity, reset the timer so it will not be closed
+ * //_RB_ Don't think this comment is correct.  If this is for internal use only
+ * it should appear after all the public API functions and not start with
+ * FreeRTOS_. Socket has had activity, reset the timer so it will not be closed
  * because of inactivity
  */
-#if ( ( ipconfigHAS_DEBUG_PRINTF != 0 ) || ( ipconfigHAS_PRINTF != 0 ) )
-    const char * FreeRTOS_GetTCPStateName( UBaseType_t ulState );
+#if( ( ipconfigHAS_DEBUG_PRINTF != 0 ) || ( ipconfigHAS_PRINTF != 0 ) )
+const char * FreeRTOS_GetTCPStateName( UBaseType_t ulState );
 #endif
 
-#if ( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
+#if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
 /* DHCP has an option for clients to register their hostname.  It doesn't
  * have much use, except that a device can be found in a router along with its
  * name. If this option is used the callback below must be provided by the
  * application writer to return a const string, denoting the device's name. */
 /* Typically this function is defined in a user module. */
-    const char * pcApplicationHostnameHook( void );
+const char * pcApplicationHostnameHook( void );
 
 #endif /* ipconfigDHCP_REGISTER_HOSTNAME */
 
-
 /* This xApplicationGetRandomNumber() will set *pulNumber to a random number,
- * and return pdTRUE. When the random number generator is broken, it shall return
- * pdFALSE.
- * The function is defined in 'iot_secure_sockets.c'.
- * If that module is not included in the project, the application must provide an
+ * and return pdTRUE. When the random number generator is broken, it shall
+ * return pdFALSE. The function is defined in 'iot_secure_sockets.c'. If that
+ * module is not included in the project, the application must provide an
  * implementation of it.
  * The macro's ipconfigRAND32() and configRAND32() are not in use anymore. */
 
@@ -458,44 +462,45 @@ BaseType_t xIsNetworkDownEventPending( void );
  * be defined in a user module. */
 BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber );
 
-/** @brief The pointer to buffer with packet waiting for ARP resolution. This variable
- *  is defined in FreeRTOS_IP.c.
- *  This pointer is for internal use only. */
+/** @brief The pointer to buffer with packet waiting for ARP resolution. This
+ * variable is defined in FreeRTOS_IP.c. This pointer is for internal use only.
+ */
 extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
 
 /* For backward compatibility define old structure names to the newer equivalent
  * structure name. */
 #ifndef ipconfigENABLE_BACKWARD_COMPATIBILITY
-    #define ipconfigENABLE_BACKWARD_COMPATIBILITY    1
+    #define ipconfigENABLE_BACKWARD_COMPATIBILITY 1
 #endif
 
-#if ( ipconfigENABLE_BACKWARD_COMPATIBILITY == 1 )
-    #define xIPStackEvent_t               IPStackEvent_t
-    #define xNetworkBufferDescriptor_t    NetworkBufferDescriptor_t
-    #define xMACAddress_t                 MACAddress_t
-    #define xWinProperties_t              WinProperties_t
-    #define xSocket_t                     Socket_t
-    #define xSocketSet_t                  SocketSet_t
-    #define ipSIZE_OF_IP_HEADER           ipSIZE_OF_IPv4_HEADER
+#if( ipconfigENABLE_BACKWARD_COMPATIBILITY == 1 )
+    #define xIPStackEvent_t            IPStackEvent_t
+    #define xNetworkBufferDescriptor_t NetworkBufferDescriptor_t
+    #define xMACAddress_t              MACAddress_t
+    #define xWinProperties_t           WinProperties_t
+    #define xSocket_t                  Socket_t
+    #define xSocketSet_t               SocketSet_t
+    #define ipSIZE_OF_IP_HEADER        ipSIZE_OF_IPv4_HEADER
 
-/* Since August 2016, the public types and fields below have changed name:
- * abbreviations TCP/UDP are now written in capitals, and type names now end with "_t". */
-    #define FOnConnected                  FOnConnected_t
-    #define FOnTcpReceive                 FOnTCPReceive_t
-    #define FOnTcpSent                    FOnTCPSent_t
-    #define FOnUdpReceive                 FOnUDPReceive_t
-    #define FOnUdpSent                    FOnUDPSent_t
+    /* Since August 2016, the public types and fields below have changed name:
+     * abbreviations TCP/UDP are now written in capitals, and type names now end
+     * with "_t". */
+    #define FOnConnected               FOnConnected_t
+    #define FOnTcpReceive              FOnTCPReceive_t
+    #define FOnTcpSent                 FOnTCPSent_t
+    #define FOnUdpReceive              FOnUDPReceive_t
+    #define FOnUdpSent                 FOnUDPSent_t
 
-    #define pOnTcpConnected               pxOnTCPConnected
-    #define pOnTcpReceive                 pxOnTCPReceive
-    #define pOnTcpSent                    pxOnTCPSent
-    #define pOnUdpReceive                 pxOnUDPReceive
-    #define pOnUdpSent                    pxOnUDPSent
+    #define pOnTcpConnected            pxOnTCPConnected
+    #define pOnTcpReceive              pxOnTCPReceive
+    #define pOnTcpSent                 pxOnTCPSent
+    #define pOnUdpReceive              pxOnUDPReceive
+    #define pOnUdpSent                 pxOnUDPSent
 
-    #define FOnUdpSent                    FOnUDPSent_t
-    #define FOnTcpSent                    FOnTCPSent_t
+    #define FOnUdpSent                 FOnUDPSent_t
+    #define FOnTcpSent                 FOnTCPSent_t
 #endif /* ipconfigENABLE_BACKWARD_COMPATIBILITY */
-
+/* clang-format off */
 #if ( ipconfigHAS_PRINTF != 0 )
     extern void vPrintResourceStats( void );
 #else
