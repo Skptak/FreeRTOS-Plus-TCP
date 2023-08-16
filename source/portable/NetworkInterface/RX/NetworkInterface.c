@@ -1,36 +1,39 @@
 /***********************************************************************************************************************
-* DISCLAIMER
-* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
-* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws.
-* THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
-* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
-* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
-* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
-* SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
-* this software. By using this software, you agree to the additional terms and conditions found by accessing the
-* following link:
-* http://www.renesas.com/disclaimer
-*
-* Copyright (C) 2020 Renesas Electronics Corporation. All rights reserved.
-***********************************************************************************************************************/
+ * DISCLAIMER
+ * This software is supplied by Renesas Electronics Corporation and is only
+ *intended for use with Renesas products. No other uses are authorized. This
+ *software is owned by Renesas Electronics Corporation and is protected under
+ *all applicable laws, including copyright laws. THIS SOFTWARE IS PROVIDED "AS
+ *IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHER EXPRESS,
+ *IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
+ *MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL
+ *SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM EXTENT PERMITTED NOT
+ *PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS
+ *AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL,
+ *INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE,
+ *EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH
+ *DAMAGES. Renesas reserves the right, without notice, to make changes to this
+ *software and to discontinue the availability of this software. By using this
+ *software, you agree to the additional terms and conditions found by accessing
+ *the following link: http://www.renesas.com/disclaimer
+ *
+ * Copyright (C) 2020 Renesas Electronics Corporation. All rights reserved.
+ ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : NetworkInterface.c
-* Device(s)    : RX
-* Description  : Interfaces FreeRTOS TCP/IP stack to RX Ethernet driver.
-***********************************************************************************************************************/
+ * File Name    : NetworkInterface.c
+ * Device(s)    : RX
+ * Description  : Interfaces FreeRTOS TCP/IP stack to RX Ethernet driver.
+ ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* History : DD.MM.YYYY Version  Description
-*         : 07.03.2018 0.1     Development
-***********************************************************************************************************************/
+ * History : DD.MM.YYYY Version  Description
+ *         : 07.03.2018 0.1     Development
+ ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-*  Includes   <System Includes> , "Project Includes"
-***********************************************************************************************************************/
+ *  Includes   <System Includes> , "Project Includes"
+ ***********************************************************************************************************************/
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,21 +54,24 @@
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define ETHER_BUFSIZE_MIN    60
+#define ETHER_BUFSIZE_MIN 60
 
-#if defined( BSP_MCU_RX65N ) || defined( BSP_MCU_RX64M ) || defined( BSP_MCU_RX71M ) || defined( BSP_MCU_RX72M ) || defined( BSP_MCU_RX72N )
+#if defined( BSP_MCU_RX65N ) || defined( BSP_MCU_RX64M ) || \
+    defined( BSP_MCU_RX71M ) || defined( BSP_MCU_RX72M ) || \
+    defined( BSP_MCU_RX72N )
     #if ETHER_CFG_MODE_SEL == 0
-        #define R_ETHER_PinSet_CHANNEL_0()    R_ETHER_PinSet_ETHERC0_MII()
+        #define R_ETHER_PinSet_CHANNEL_0() R_ETHER_PinSet_ETHERC0_MII()
     #elif ETHER_CFG_MODE_SEL == 1
-        #define R_ETHER_PinSet_CHANNEL_0()    R_ETHER_PinSet_ETHERC0_RMII()
+        #define R_ETHER_PinSet_CHANNEL_0() R_ETHER_PinSet_ETHERC0_RMII()
     #endif
 #elif defined( BSP_MCU_RX63N )
     #if ETHER_CFG_MODE_SEL == 0
-        #define R_ETHER_PinSet_CHANNEL_0()    R_ETHER_PinSet_ETHERC_MII()
+        #define R_ETHER_PinSet_CHANNEL_0() R_ETHER_PinSet_ETHERC_MII()
     #elif ETHER_CFG_MODE_SEL == 1
-        #define R_ETHER_PinSet_CHANNEL_0()    R_ETHER_PinSet_ETHERC_RMII()
+        #define R_ETHER_PinSet_CHANNEL_0() R_ETHER_PinSet_ETHERC_RMII()
     #endif
-#endif /* if defined( BSP_MCU_RX65N ) || defined( BSP_MCU_RX64M ) || defined( BSP_MCU_RX71M ) */
+#endif /* if defined( BSP_MCU_RX65N ) || defined( BSP_MCU_RX64M ) || defined( \
+          BSP_MCU_RX71M ) */
 
 #if defined( PHY_LS_HIGH_CHECK_TIME_MS ) || defined( PHY_LS_LOW_CHECK_TIME_MS )
     #error please use the new defines with 'ipconfig' prefix
@@ -75,14 +81,13 @@
 
 /* Check if the LinkStatus in the PHY is still high after 2 seconds of not
  * receiving packets. */
-    #define ipconfigPHY_LS_HIGH_CHECK_TIME_MS    2000U
+    #define ipconfigPHY_LS_HIGH_CHECK_TIME_MS 2000U
 #endif
 
 #ifndef ipconfigPHY_LS_LOW_CHECK_TIME_MS
     /* Check if the LinkStatus in the PHY is still low every second. */
-    #define ipconfigPHY_LS_LOW_CHECK_TIME_MS    1000U
+    #define ipconfigPHY_LS_LOW_CHECK_TIME_MS 1000U
 #endif
-
 
 /***********************************************************************************************************************
  * Private global variables and functions
@@ -103,35 +108,37 @@ static eMAC_INIT_STATUS_TYPE xMacInitStatus = eMACInit;
 /* Pointer to the interface object of this NIC */
 static NetworkInterface_t * pxMyInterface = NULL;
 
-static int16_t SendData( uint8_t * pucBuffer,
-                         size_t length );
+static int16_t SendData( uint8_t * pucBuffer, size_t length );
 static int InitializeNetwork( void );
 static void prvEMACDeferredInterruptHandlerTask( void * pvParameters );
 static void clear_all_ether_rx_discriptors( uint32_t event );
 
 int32_t callback_ether_regist( void );
 void EINT_Trig_isr( void * );
-void get_random_number( uint8_t * data,
-                        uint32_t len );
+void get_random_number( uint8_t * data, uint32_t len );
 
 void prvLinkStatusChange( BaseType_t xStatus );
 
 /*-----------------------------------------------------------*/
 
-NetworkInterface_t * pxRX_FillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                   NetworkInterface_t * pxInterface );
+NetworkInterface_t * pxRX_FillInterfaceDescriptor(
+    BaseType_t xEMACIndex,
+    NetworkInterface_t * pxInterface );
 
 /* Function to initialise the network interface */
 BaseType_t xRX_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface );
 
-BaseType_t xRX_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
-                                       NetworkBufferDescriptor_t * const pxDescriptor,
-                                       BaseType_t bReleaseAfterSend );
+BaseType_t xRX_NetworkInterfaceOutput(
+    NetworkInterface_t * pxInterface,
+    NetworkBufferDescriptor_t * const pxDescriptor,
+    BaseType_t bReleaseAfterSend );
 
-static inline BaseType_t xRX_PHYGetLinkStatus( NetworkInterface_t * pxInterface );
+static inline BaseType_t xRX_PHYGetLinkStatus(
+    NetworkInterface_t * pxInterface );
 
-NetworkInterface_t * pxRX_FillInterfaceDescriptor( BaseType_t xEMACIndex,
-                                                   NetworkInterface_t * pxInterface )
+NetworkInterface_t * pxRX_FillInterfaceDescriptor(
+    BaseType_t xEMACIndex,
+    NetworkInterface_t * pxInterface )
 {
     static char pcName[ 17 ];
 
@@ -142,8 +149,9 @@ NetworkInterface_t * pxRX_FillInterfaceDescriptor( BaseType_t xEMACIndex,
     snprintf( pcName, sizeof( pcName ), "eth%u", ( unsigned ) xEMACIndex );
 
     memset( pxInterface, '\0', sizeof( *pxInterface ) );
-    pxInterface->pcName = pcName;                    /* Just for logging, debugging. */
-    pxInterface->pvArgument = ( void * ) xEMACIndex; /* Has only meaning for the driver functions. */
+    pxInterface->pcName = pcName; /* Just for logging, debugging. */
+    pxInterface->pvArgument = ( void * ) xEMACIndex; /* Has only meaning for the
+                                                        driver functions. */
     pxInterface->pfInitialise = xRX_NetworkInterfaceInitialise;
     pxInterface->pfOutput = xRX_NetworkInterfaceOutput;
     pxInterface->pfGetPhyLinkStatus = xRX_PHYGetLinkStatus;
@@ -168,10 +176,13 @@ BaseType_t xRX_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
         pxMyInterface = pxInterface;
 
         /*
-         * Perform the hardware specific network initialization here using the Ethernet driver library to initialize the
-         * Ethernet hardware, initialize DMA descriptors, and perform a PHY auto-negotiation to obtain a network link.
+         * Perform the hardware specific network initialization here using the
+         * Ethernet driver library to initialize the Ethernet hardware,
+         * initialize DMA descriptors, and perform a PHY auto-negotiation to
+         * obtain a network link.
          *
-         * InitialiseNetwork() uses Ethernet peripheral driver library function, and returns 0 if the initialization fails.
+         * InitialiseNetwork() uses Ethernet peripheral driver library function,
+         * and returns 0 if the initialization fails.
          */
         if( InitializeNetwork() == pdFALSE )
         {
@@ -183,7 +194,8 @@ BaseType_t xRX_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
             xMacInitStatus = eMACPass;
         }
 
-        FreeRTOS_printf( ( "InitializeNetwork returns %s\n", ( xMacInitStatus == eMACPass ) ? "OK" : " Fail" ) );
+        FreeRTOS_printf( ( "InitializeNetwork returns %s\n",
+                           ( xMacInitStatus == eMACPass ) ? "OK" : " Fail" ) );
     }
 
     if( xMacInitStatus == eMACPass )
@@ -200,33 +212,35 @@ BaseType_t xRX_NetworkInterfaceInitialise( NetworkInterface_t * pxInterface )
     return xReturn;
 } /* End of function xNetworkInterfaceInitialise() */
 
-
 /***********************************************************************************************************************
  * Function Name: xRX_NetworkInterfaceOutput ()
  * Description  : Simple network output interface.
  * Arguments    : pxInterface, pxDescriptor, xReleaseAfterSend
  * Return Value : pdTRUE, pdFALSE
  **********************************************************************************************************************/
-BaseType_t xRX_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
-                                       NetworkBufferDescriptor_t * const pxDescriptor,
-                                       BaseType_t xReleaseAfterSend )
+BaseType_t xRX_NetworkInterfaceOutput(
+    NetworkInterface_t * pxInterface,
+    NetworkBufferDescriptor_t * const pxDescriptor,
+    BaseType_t xReleaseAfterSend )
 {
     BaseType_t xReturn = pdFALSE;
 
-    /* As there is only a single instance of the EMAC, there is only one pxInterface object. */
+    /* As there is only a single instance of the EMAC, there is only one
+     * pxInterface object. */
     ( void ) pxInterface;
 
     /* Simple network interfaces (as opposed to more efficient zero copy network
      * interfaces) just use Ethernet peripheral driver library functions to copy
-     * data from the FreeRTOS+TCP buffer into the peripheral driver's own buffer.
-     * This example assumes SendData() is a peripheral driver library function that
-     * takes a pointer to the start of the data to be sent and the length of the
-     * data to be sent as two separate parameters.  The start of the data is located
-     * by pxDescriptor->pucEthernetBuffer.  The length of the data is located
-     * by pxDescriptor->xDataLength. */
+     * data from the FreeRTOS+TCP buffer into the peripheral driver's own
+     * buffer. This example assumes SendData() is a peripheral driver library
+     * function that takes a pointer to the start of the data to be sent and the
+     * length of the data to be sent as two separate parameters.  The start of
+     * the data is located by pxDescriptor->pucEthernetBuffer.  The length of
+     * the data is located by pxDescriptor->xDataLength. */
     if( xPHYLinkStatus != 0 )
     {
-        if( SendData( pxDescriptor->pucEthernetBuffer, pxDescriptor->xDataLength ) >= 0 )
+        if( SendData( pxDescriptor->pucEthernetBuffer,
+                      pxDescriptor->xDataLength ) >= 0 )
         {
             xReturn = pdTRUE;
             /* Call the standard trace macro to log the send event. */
@@ -235,20 +249,20 @@ BaseType_t xRX_NetworkInterfaceOutput( NetworkInterface_t * pxInterface,
     }
     else
     {
-        /* As the PHY Link Status is low, it makes no sense trying to deliver a packet. */
+        /* As the PHY Link Status is low, it makes no sense trying to deliver a
+         * packet. */
     }
 
     if( xReleaseAfterSend != pdFALSE )
     {
-        /* It is assumed SendData() copies the data out of the FreeRTOS+TCP Ethernet
-         * buffer.  The Ethernet buffer is therefore no longer needed, and must be
-         * freed for re-use. */
+        /* It is assumed SendData() copies the data out of the FreeRTOS+TCP
+         * Ethernet buffer.  The Ethernet buffer is therefore no longer needed,
+         * and must be freed for re-use. */
         vReleaseNetworkBufferAndDescriptor( pxDescriptor );
     }
 
     return xReturn;
 } /* End of function xNetworkInterfaceOutput() */
-
 
 /***********************************************************************************************************************
  * Function Name: prvEMACDeferredInterruptHandlerTask ()
@@ -281,16 +295,16 @@ static void prvEMACDeferredInterruptHandlerTask( void * pvParameters )
     FreeRTOS_printf( ( "Deferred Interrupt Handler Task started\n" ) );
     xTaskToNotify = ether_receive_check_task_handle;
 
-    for( ; ; )
+    for( ;; )
     {
-        #if ( ipconfigHAS_PRINTF != 0 )
-            {
-                /* Call a function that monitors resources: the amount of free network
-                 * buffers and the amount of free space on the heap.  See FreeRTOS_IP.c
-                 * for more detailed comments. */
-                vPrintResourceStats();
-            }
-        #endif /* ( ipconfigHAS_PRINTF != 0 ) */
+#if( ipconfigHAS_PRINTF != 0 )
+        {
+            /* Call a function that monitors resources: the amount of free
+             * network buffers and the amount of free space on the heap.  See
+             * FreeRTOS_IP.c for more detailed comments. */
+            vPrintResourceStats();
+        }
+#endif /* ( ipconfigHAS_PRINTF != 0 ) */
 
         /* Wait for the Ethernet MAC interrupt to indicate that another packet
          * has been received.  */
@@ -300,85 +314,107 @@ static void prvEMACDeferredInterruptHandlerTask( void * pvParameters )
         }
 
         /* See how much data was received.  */
-        xBytesReceived = R_ETHER_Read_ZC2( ETHER_CHANNEL_0, ( void ** ) &buffer_pointer );
+        xBytesReceived = R_ETHER_Read_ZC2( ETHER_CHANNEL_0,
+                                           ( void ** ) &buffer_pointer );
 
         if( xBytesReceived < 0 )
         {
             /* This is an error. Logged. */
-            FreeRTOS_debug_printf( ( "R_ETHER_Read_ZC2: rc = %d\n", xBytesReceived ) );
+            FreeRTOS_debug_printf(
+                ( "R_ETHER_Read_ZC2: rc = %d\n", xBytesReceived ) );
         }
         else if( xBytesReceived > 0 )
         {
             /* Allocate a network buffer descriptor that points to a buffer
              * large enough to hold the received frame.  As this is the simple
-             * rather than efficient example the received data will just be copied
-             * into this buffer. */
-            pxBufferDescriptor = pxGetNetworkBufferWithDescriptor( ( size_t ) xBytesReceived, 0 );
+             * rather than efficient example the received data will just be
+             * copied into this buffer. */
+            pxBufferDescriptor = pxGetNetworkBufferWithDescriptor(
+                ( size_t ) xBytesReceived,
+                0 );
 
             if( pxBufferDescriptor != NULL )
             {
-                /* pxBufferDescriptor->pucEthernetBuffer now points to an Ethernet
-                 * buffer large enough to hold the received data.  Copy the
-                 * received data into pcNetworkBuffer->pucEthernetBuffer.  Here it
-                 * is assumed ReceiveData() is a peripheral driver function that
-                 * copies the received data into a buffer passed in as the function's
-                 * parameter.  Remember! While is is a simple robust technique -
-                 * it is not efficient.  An example that uses a zero copy technique
-                 * is provided further down this page. */
-                memcpy( pxBufferDescriptor->pucEthernetBuffer, buffer_pointer, ( size_t ) xBytesReceived );
+                /* pxBufferDescriptor->pucEthernetBuffer now points to an
+                 * Ethernet buffer large enough to hold the received data.  Copy
+                 * the received data into pcNetworkBuffer->pucEthernetBuffer.
+                 * Here it is assumed ReceiveData() is a peripheral driver
+                 * function that copies the received data into a buffer passed
+                 * in as the function's parameter.  Remember! While is is a
+                 * simple robust technique - it is not efficient.  An example
+                 * that uses a zero copy technique is provided further down this
+                 * page. */
+                memcpy( pxBufferDescriptor->pucEthernetBuffer,
+                        buffer_pointer,
+                        ( size_t ) xBytesReceived );
                 /*ReceiveData( pxBufferDescriptor->pucEthernetBuffer ); */
 
-                /* Set the actual packet length, in case a larger buffer was returned. */
+                /* Set the actual packet length, in case a larger buffer was
+                 * returned. */
                 pxBufferDescriptor->xDataLength = ( size_t ) xBytesReceived;
                 pxBufferDescriptor->pxInterface = pxMyInterface;
-                pxBufferDescriptor->pxEndPoint = FreeRTOS_MatchingEndpoint( pxMyInterface, pxBufferDescriptor->pucEthernetBuffer );
+                pxBufferDescriptor->pxEndPoint = FreeRTOS_MatchingEndpoint(
+                    pxMyInterface,
+                    pxBufferDescriptor->pucEthernetBuffer );
 
                 R_ETHER_Read_ZC2_BufRelease( ETHER_CHANNEL_0 );
 
-                /* See if the data contained in the received Ethernet frame needs
-                * to be processed.  NOTE! It is preferable to do this in
-                * the interrupt service routine itself, which would remove the need
-                * to unblock this task for packets that don't need processing. */
-                if( ( eConsiderFrameForProcessing( pxBufferDescriptor->pucEthernetBuffer ) == eProcessBuffer ) && ( pxBufferDescriptor->pxEndPoint != NULL ) )
+                /* See if the data contained in the received Ethernet frame
+                 * needs to be processed.  NOTE! It is preferable to do this in
+                 * the interrupt service routine itself, which would remove the
+                 * need to unblock this task for packets that don't need
+                 * processing. */
+                if( ( eConsiderFrameForProcessing(
+                          pxBufferDescriptor->pucEthernetBuffer ) ==
+                      eProcessBuffer ) &&
+                    ( pxBufferDescriptor->pxEndPoint != NULL ) )
                 {
-                    /* The event about to be sent to the TCP/IP is an Rx event. */
+                    /* The event about to be sent to the TCP/IP is an Rx event.
+                     */
                     xRxEvent.eEventType = eNetworkRxEvent;
 
-                    /* pvData is used to point to the network buffer descriptor that
-                     * now references the received data. */
+                    /* pvData is used to point to the network buffer descriptor
+                     * that now references the received data. */
                     xRxEvent.pvData = ( void * ) pxBufferDescriptor;
 
                     /* Send the data to the TCP/IP stack. */
                     if( xSendEventStructToIPTask( &xRxEvent, 0 ) == pdFALSE )
                     {
-                        /* The buffer could not be sent to the IP task so the buffer must be released. */
-                        vReleaseNetworkBufferAndDescriptor( pxBufferDescriptor );
+                        /* The buffer could not be sent to the IP task so the
+                         * buffer must be released. */
+                        vReleaseNetworkBufferAndDescriptor(
+                            pxBufferDescriptor );
 
-                        /* Make a call to the standard trace macro to log the occurrence. */
+                        /* Make a call to the standard trace macro to log the
+                         * occurrence. */
                         iptraceETHERNET_RX_EVENT_LOST();
                         clear_all_ether_rx_discriptors( 0 );
                     }
                     else
                     {
-                        /* The message was successfully sent to the TCP/IP stack.
-                        * Call the standard trace macro to log the occurrence. */
+                        /* The message was successfully sent to the TCP/IP
+                         * stack. Call the standard trace macro to log the
+                         * occurrence. */
                         iptraceNETWORK_INTERFACE_RECEIVE();
                         R_BSP_NOP();
                     }
                 }
                 else
                 {
-                    /* The Ethernet frame can be dropped, but the Ethernet buffer must be released. */
+                    /* The Ethernet frame can be dropped, but the Ethernet
+                     * buffer must be released. */
                     vReleaseNetworkBufferAndDescriptor( pxBufferDescriptor );
                 }
             }
             else
             {
-                /* The event was lost because a network buffer was not available.
-                 * Call the standard trace macro to log the occurrence. */
+                /* The event was lost because a network buffer was not
+                 * available. Call the standard trace macro to log the
+                 * occurrence. */
                 iptraceETHERNET_RX_EVENT_LOST();
                 clear_all_ether_rx_discriptors( 1 );
-                FreeRTOS_printf( ( "R_ETHER_Read_ZC2: Cleared descriptors\n" ) );
+                FreeRTOS_printf(
+                    ( "R_ETHER_Read_ZC2: Cleared descriptors\n" ) );
             }
         }
 
@@ -394,24 +430,29 @@ static void prvEMACDeferredInterruptHandlerTask( void * pvParameters )
             if( xPHYLinkStatus == 0 )
             {
                 xPHYLinkStatus = 1;
-                FreeRTOS_printf( ( "prvEMACHandlerTask: PHY LS assume %d\n", xPHYLinkStatus ) );
+                FreeRTOS_printf( ( "prvEMACHandlerTask: PHY LS assume %d\n",
+                                   xPHYLinkStatus ) );
             }
         }
-        else if( ( xTaskCheckForTimeOut( &xPhyTime, &xPhyRemTime ) != pdFALSE ) || ( FreeRTOS_IsNetworkUp() == pdFALSE ) )
+        else if( ( xTaskCheckForTimeOut( &xPhyTime, &xPhyRemTime ) !=
+                   pdFALSE ) ||
+                 ( FreeRTOS_IsNetworkUp() == pdFALSE ) )
         {
             R_ETHER_LinkProcess( ETHER_CHANNEL_0 );
 
             if( xPHYLinkStatus != xReportedStatus )
             {
                 xPHYLinkStatus = xReportedStatus;
-                FreeRTOS_printf( ( "prvEMACHandlerTask: PHY LS now %d\n", xPHYLinkStatus ) );
+                FreeRTOS_printf(
+                    ( "prvEMACHandlerTask: PHY LS now %d\n", xPHYLinkStatus ) );
             }
 
             vTaskSetTimeOutState( &xPhyTime );
 
             if( xPHYLinkStatus != 0 )
             {
-                xPhyRemTime = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );
+                xPhyRemTime = pdMS_TO_TICKS(
+                    ipconfigPHY_LS_HIGH_CHECK_TIME_MS );
             }
             else
             {
@@ -421,7 +462,6 @@ static void prvEMACDeferredInterruptHandlerTask( void * pvParameters )
     }
 } /* End of function prvEMACDeferredInterruptHandlerTask() */
 
-
 /***********************************************************************************************************************
  * Function Name: vNetworkInterfaceAllocateRAMToBuffers ()
  * Description  : .
@@ -429,16 +469,20 @@ static void prvEMACDeferredInterruptHandlerTask( void * pvParameters )
  * Return Value : none
  **********************************************************************************************************************/
 
-void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ] )
+void vNetworkInterfaceAllocateRAMToBuffers(
+    NetworkBufferDescriptor_t
+        pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ] )
 {
     uint32_t ul;
     uint8_t * buffer_address;
     portPOINTER_SIZE_TYPE uxStartAddress;
 
-    static uint8_t ETH_BUFFERS[ ( ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * ETHER_CFG_BUFSIZE ) + portBYTE_ALIGNMENT ];
+    static uint8_t ETH_BUFFERS[ ( ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS *
+                                  ETHER_CFG_BUFSIZE ) +
+                                portBYTE_ALIGNMENT ];
 
     /* Align the buffer start address to portBYTE_ALIGNMENT bytes */
-    uxStartAddress = ( portPOINTER_SIZE_TYPE ) & ETH_BUFFERS[ 0 ];
+    uxStartAddress = ( portPOINTER_SIZE_TYPE ) &ETH_BUFFERS[ 0 ];
     uxStartAddress += portBYTE_ALIGNMENT;
     uxStartAddress &= ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK );
 
@@ -446,17 +490,19 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
 
     for( ul = 0; ul < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; ul++ )
     {
-        pxNetworkBuffers[ ul ].pucEthernetBuffer = buffer_address + ipBUFFER_PADDING;
-        *( ( unsigned * ) buffer_address ) = ( unsigned ) ( &( pxNetworkBuffers[ ul ] ) );
+        pxNetworkBuffers[ ul ].pucEthernetBuffer = buffer_address +
+                                                   ipBUFFER_PADDING;
+        *( ( unsigned * ) buffer_address ) = ( unsigned ) ( &(
+            pxNetworkBuffers[ ul ] ) );
         buffer_address += ETHER_CFG_BUFSIZE;
     }
 } /* End of function vNetworkInterfaceAllocateRAMToBuffers() */
 
 /***********************************************************************************************************************
  * Function Name: prvLinkStatusChange ()
- * Description  : Function will be called when the Link Status of the phy has changed ( see ether_callback.c )
- * Arguments    : xStatus : true when status has become high
- * Return Value : void
+ * Description  : Function will be called when the Link Status of the phy has
+ *changed ( see ether_callback.c ) Arguments    : xStatus : true when status has
+ *become high Return Value : void
  **********************************************************************************************************************/
 void prvLinkStatusChange( BaseType_t xStatus )
 {
@@ -479,19 +525,23 @@ static int InitializeNetwork( void )
     BaseType_t return_code = pdFALSE;
     ether_param_t param;
 
-    /* Read the mac address after it has been initilized by the FreeRTOS IP Stack, rather than from defines
-     * as the mac address is usually read from the EEPROM, and it might be different to the mac address in
-     * the defines, especially in production environments
+    /* Read the mac address after it has been initilized by the FreeRTOS IP
+     * Stack, rather than from defines as the mac address is usually read from
+     * the EEPROM, and it might be different to the mac address in the defines,
+     * especially in production environments
      */
     configASSERT( pxMyInterface );
-    const uint8_t * myethaddr = &pxMyInterface->pxEndPoint->xMACAddress.ucBytes[ 0 ];
+    const uint8_t * myethaddr = &pxMyInterface->pxEndPoint->xMACAddress
+                                     .ucBytes[ 0 ];
 
     R_ETHER_PinSet_CHANNEL_0();
     R_ETHER_Initial();
     callback_ether_regist();
 
     param.channel = ETHER_CHANNEL_0;
-    eth_ret = R_ETHER_Control( CONTROL_POWER_ON, param ); /* PHY mode settings, module stop cancellation */
+    eth_ret = R_ETHER_Control( CONTROL_POWER_ON, param ); /* PHY mode settings,
+                                                             module stop
+                                                             cancellation */
 
     if( ETHER_SUCCESS != eth_ret )
     {
@@ -527,7 +577,6 @@ static int InitializeNetwork( void )
     return pdTRUE;
 } /* End of function InitializeNetwork() */
 
-
 /***********************************************************************************************************************
  * Function Name: SendData ()
  * Description  :
@@ -541,8 +590,11 @@ static int16_t SendData( uint8_t * pucBuffer,
     uint8_t * pwrite_buffer;
     uint16_t write_buf_size;
 
-    /* (1) Retrieve the transmit buffer location controlled by the  descriptor. */
-    ret = R_ETHER_Write_ZC2_GetBuf( ETHER_CHANNEL_0, ( void ** ) &pwrite_buffer, &write_buf_size );
+    /* (1) Retrieve the transmit buffer location controlled by the  descriptor.
+     */
+    ret = R_ETHER_Write_ZC2_GetBuf( ETHER_CHANNEL_0,
+                                    ( void ** ) &pwrite_buffer,
+                                    &write_buf_size );
 
     if( ETHER_SUCCESS == ret )
     {
@@ -551,10 +603,12 @@ static int16_t SendData( uint8_t * pucBuffer,
             memcpy( pwrite_buffer, pucBuffer, length );
         }
 
-        if( length < ETHER_BUFSIZE_MIN )                                             /*under minimum*/
+        if( length < ETHER_BUFSIZE_MIN ) /*under minimum*/
         {
-            memset( ( pwrite_buffer + length ), 0, ( ETHER_BUFSIZE_MIN - length ) ); /*padding*/
-            length = ETHER_BUFSIZE_MIN;                                              /*resize*/
+            memset( ( pwrite_buffer + length ),
+                    0,
+                    ( ETHER_BUFSIZE_MIN - length ) ); /*padding*/
+            length = ETHER_BUFSIZE_MIN;               /*resize*/
         }
 
         ret = R_ETHER_Write_ZC2_SetBuf( ETHER_CHANNEL_0, ( uint16_t ) length );
@@ -571,14 +625,14 @@ static int16_t SendData( uint8_t * pucBuffer,
     }
 } /* End of function SendData() */
 
-
 /***********************************************************************************************************************
-* Function Name: EINT_Trig_isr
-* Description  : Standard frame received interrupt handler
-* Arguments    : ectrl - EDMAC and ETHERC control structure
-* Return Value : None
-* Note         : This callback function is executed when EINT0 interrupt occurred.
-***********************************************************************************************************************/
+ * Function Name: EINT_Trig_isr
+ * Description  : Standard frame received interrupt handler
+ * Arguments    : ectrl - EDMAC and ETHERC control structure
+ * Return Value : None
+ * Note         : This callback function is executed when EINT0 interrupt
+ *occurred.
+ ***********************************************************************************************************************/
 void EINT_Trig_isr( void * ectrl )
 {
     ether_cb_arg_t * pdecode;
@@ -586,22 +640,24 @@ void EINT_Trig_isr( void * ectrl )
 
     pdecode = ( ether_cb_arg_t * ) ectrl;
 
-    if( pdecode->status_eesr & 0x00040000 ) /* EDMAC FR (Frame Receive Event) interrupt */
+    if( pdecode->status_eesr & 0x00040000 ) /* EDMAC FR (Frame Receive Event)
+                                               interrupt */
     {
         if( xTaskToNotify != NULL )
         {
-            vTaskNotifyGiveFromISR( ether_receive_check_task_handle, &xHigherPriorityTaskWoken );
+            vTaskNotifyGiveFromISR( ether_receive_check_task_handle,
+                                    &xHigherPriorityTaskWoken );
         }
 
-        /* If xHigherPriorityTaskWoken is now set to pdTRUE then a context switch
-         * should be performed to ensure the interrupt returns directly to the highest
-         * priority task.  The macro used for this purpose is dependent on the port in
-         * use and may be called portEND_SWITCHING_ISR(). */
+        /* If xHigherPriorityTaskWoken is now set to pdTRUE then a context
+         * switch should be performed to ensure the interrupt returns directly
+         * to the highest priority task.  The macro used for this purpose is
+         * dependent on the port in use and may be called
+         * portEND_SWITCHING_ISR(). */
         portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
         /*TODO complete interrupt handler for other events. */
     }
 } /* End of function EINT_Trig_isr() */
-
 
 static void clear_all_ether_rx_discriptors( uint32_t event )
 {
@@ -614,7 +670,8 @@ static void clear_all_ether_rx_discriptors( uint32_t event )
     while( 1 )
     {
         /* See how much data was received.  */
-        xBytesReceived = R_ETHER_Read_ZC2( ETHER_CHANNEL_0, ( void ** ) &buffer_pointer );
+        xBytesReceived = R_ETHER_Read_ZC2( ETHER_CHANNEL_0,
+                                           ( void ** ) &buffer_pointer );
 
         if( 0 > xBytesReceived )
         {
@@ -635,9 +692,8 @@ static void clear_all_ether_rx_discriptors( uint32_t event )
 static inline BaseType_t xRX_PHYGetLinkStatus( NetworkInterface_t * pxInterface )
 {
     ( void ) pxInterface;
-    return( xPHYLinkStatus != 0 );
+    return ( xPHYLinkStatus != 0 );
 }
-
 
 /***********************************************************************************************************************
  * End of file "NetworkInterface.c"

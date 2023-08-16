@@ -90,6 +90,7 @@ jobs:
         uses: Skptak/CI-CD-Github-Actions/formatting@main
         with:
           path: ./
+          exclude-files: FreeRTOS_IP.h
 
   doxygen:
     runs-on: ubuntu-latest
