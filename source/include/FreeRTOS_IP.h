@@ -515,9 +515,8 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
  * within the last round. */
     extern BaseType_t xProcessedTCPMessage;
 #endif
-
+/* clang-format on */
 #include "FreeRTOS_IP_Utils.h" /*TODO can be moved after other 2 includes */
-
 
 #include "FreeRTOS_IPv4.h"
 
@@ -525,10 +524,8 @@ extern NetworkBufferDescriptor_t * pxARPWaitingNetworkBuffer;
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    } /* extern "C" */
+} /* extern "C" */
 #endif
 /* *INDENT-ON* */
-
-/* clang-format on */
 
 #endif /* FREERTOS_IP_H */
