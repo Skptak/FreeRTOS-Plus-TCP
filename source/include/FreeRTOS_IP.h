@@ -186,7 +186,6 @@ typedef struct xNETWORK_BUFFER
 #define x_IPv6Address xIPAddress.xIP_IPv6
 } NetworkBufferDescriptor_t;
 
-/* clang-format off */
 #include "pack_struct_start.h"
 
 /**
@@ -194,7 +193,8 @@ typedef struct xNETWORK_BUFFER
  */
 struct xMAC_ADDRESS
 {
-    uint8_t ucBytes[ ipMAC_ADDRESS_LENGTH_BYTES ]; /**< Byte array of the MAC address */
+    uint8_t ucBytes[ ipMAC_ADDRESS_LENGTH_BYTES ]; /**< Byte array of the MAC
+                                                      address */
 }
 #include "pack_struct_end.h"
 
@@ -210,11 +210,14 @@ typedef enum eNETWORK_EVENTS
  * ipconfigSUPPORT_OUTGOING_PINGS is not enabled. */
 typedef enum ePING_REPLY_STATUS
 {
-    eSuccess = 0,     /**< A correct reply has been received for an outgoing ping. */
-    eInvalidChecksum, /**< A reply was received for an outgoing ping but the checksum of the reply was incorrect. */
-    eInvalidData      /**< A reply was received to an outgoing ping but the payload of the reply was not correct. */
+    eSuccess = 0, /**< A correct reply has been received for an outgoing ping.
+                   */
+    eInvalidChecksum, /**< A reply was received for an outgoing ping but the
+                         checksum of the reply was incorrect. */
+    eInvalidData /**< A reply was received to an outgoing ping but the payload
+                    of the reply was not correct. */
 } ePingReplyStatus_t;
-
+/* clang-format off */
 /**
  * The software timer struct for various IP functions
  */
