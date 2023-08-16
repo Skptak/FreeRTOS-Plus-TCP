@@ -104,12 +104,13 @@
 
     /* NBNS constants. */
     #if( ipconfigUSE_NBNS != 0 )
-        #define dnsNBNS_TTL_VALUE            3600UL /**< NBNS TTL: 1 hour valid. */
-        #define dnsNBNS_TYPE_NET_BIOS        0x0020U /**< NBNS Type: NetBIOS. */
-        #define dnsNBNS_CLASS_IN             0x01U /**< NBNS Class: IN (Internet). */
-        #define dnsNBNS_NAME_FLAGS           0x6000U /**< NBNS name flags. */
-        #define dnsNBNS_ENCODED_NAME_LENGTH  32 /**< NBNS encoded name length. \
-                                                 */
+        #define dnsNBNS_TTL_VALUE     3600UL  /**< NBNS TTL: 1 hour valid. */
+        #define dnsNBNS_TYPE_NET_BIOS 0x0020U /**< NBNS Type: NetBIOS. */
+        #define dnsNBNS_CLASS_IN      0x01U   /**< NBNS Class: IN (Internet). */
+        #define dnsNBNS_NAME_FLAGS    0x6000U /**< NBNS name flags. */
+        #define dnsNBNS_ENCODED_NAME_LENGTH   \
+            32 /**< NBNS encoded name length. \
+                */
 
         /** @brief If the queried NBNS name matches with the device's name,
          * the query will be responded to with these flags: */

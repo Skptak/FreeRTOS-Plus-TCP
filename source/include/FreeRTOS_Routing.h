@@ -105,12 +105,13 @@ typedef struct xIPV4Parameters
                              end-point is still down. */
     uint32_t ulNetMask;   /**< The netmask. */
     uint32_t ulGatewayAddress; /**< The IP-address of the gateway. */
-    uint32_t ulDNSServerAddresses[ ipconfigENDPOINT_DNS_ADDRESS_COUNT ]; /**<
-                                                                            IP-addresses
-                                                                            of
-                                                                            DNS
-                                                                            servers.
-                                                                          */
+    uint32_t
+        ulDNSServerAddresses[ ipconfigENDPOINT_DNS_ADDRESS_COUNT ]; /**<
+                                                                       IP-addresses
+                                                                       of
+                                                                       DNS
+                                                                       servers.
+                                                                     */
     uint32_t ulBroadcastAddress; /**< The local broadcast address, e.g.
                                     '192.168.1.255'. */
     uint8_t ucDNSIndex; /**< The index of the next DNS address to be used. */
