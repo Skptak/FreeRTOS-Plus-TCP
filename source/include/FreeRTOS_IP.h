@@ -152,7 +152,7 @@ extern uint32_t ulApplicationGetNextSequenceNumber(
     #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )                        /**< Empty definition since ipconfigHAS_PRINTF != 1. */
     #define DEBUG_SET_TRACE_VARIABLE( var, value )                                 /**< Empty definition since ipconfigHAS_PRINTF != 1. */
 #endif
-
+/* clang-format on */
 /**
  * The structure used to store buffers and pass them around the network stack.
  * Buffers can be in use by the stack, in use by the network interface hardware
@@ -160,23 +160,33 @@ extern uint32_t ulApplicationGetNextSequenceNumber(
  */
 typedef struct xNETWORK_BUFFER
 {
-    ListItem_t xBufferListItem;                /**< Used to reference the buffer form the free buffer list or a socket. */
-    IP_Address_t xIPAddress;                   /**< Source or destination IP address, depending on usage scenario. */
-    uint8_t * pucEthernetBuffer;               /**< Pointer to the start of the Ethernet frame. */
-    size_t xDataLength;                        /**< Starts by holding the total Ethernet frame length, then the UDP/TCP payload length. */
-    struct xNetworkInterface * pxInterface;    /**< The interface on which the packet was received. */
-    struct xNetworkEndPoint * pxEndPoint;      /**< The end-point through which this packet shall be sent. */
-    uint16_t usPort;                           /**< Source or destination port, depending on usage scenario. */
-    uint16_t usBoundPort;                      /**< The port to which a transmitting socket is bound. */
-    #if ( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
-        struct xNETWORK_BUFFER * pxNextBuffer; /**< Possible optimisation for expert users - requires network driver support. */
-    #endif
+    ListItem_t xBufferListItem; /**< Used to reference the buffer form the free
+                                   buffer list or a socket. */
+    IP_Address_t xIPAddress; /**< Source or destination IP address, depending on
+                                usage scenario. */
+    uint8_t * pucEthernetBuffer; /**< Pointer to the start of the Ethernet
+                                    frame. */
+    size_t xDataLength; /**< Starts by holding the total Ethernet frame length,
+                           then the UDP/TCP payload length. */
+    struct xNetworkInterface * pxInterface; /**< The interface on which the
+                                               packet was received. */
+    struct xNetworkEndPoint * pxEndPoint; /**< The end-point through which this
+                                             packet shall be sent. */
+    uint16_t usPort;      /**< Source or destination port, depending on usage
+                             scenario. */
+    uint16_t usBoundPort; /**< The port to which a transmitting socket is bound.
+                           */
+#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
+    struct xNETWORK_BUFFER * pxNextBuffer; /**< Possible optimisation for expert
+                                              users - requires network driver
+                                              support. */
+#endif
 
-#define ul_IPAddress     xIPAddress.xIP_IPv4
-#define x_IPv6Address    xIPAddress.xIP_IPv6
+#define ul_IPAddress  xIPAddress.xIP_IPv4
+#define x_IPv6Address xIPAddress.xIP_IPv6
 } NetworkBufferDescriptor_t;
 
-
+/* clang-format off */
 #include "pack_struct_start.h"
 
 /**
