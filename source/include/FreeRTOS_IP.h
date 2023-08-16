@@ -310,7 +310,7 @@ uint32_t FreeRTOS_round_down( uint32_t a, uint32_t d );
 #ifndef ipFALSE_BOOL
     #define ipFALSE_BOOL ( 1 == 2 )
 #endif /* ipFALSE_BOOL */
-/* clang-format off */
+
 /*
  * FULL, UP-TO-DATE AND MAINTAINED REFERENCE DOCUMENTATION FOR ALL THESE
  * FUNCTIONS IS AVAILABLE ON THE FOLLOWING URL:
@@ -323,7 +323,7 @@ uint32_t FreeRTOS_round_down( uint32_t a, uint32_t d );
 BaseType_t FreeRTOS_IPInit_Multi( void );
 
 struct xNetworkInterface;
-
+/* clang-format off */
 #if defined( ipconfigIPv4_BACKWARD_COMPATIBLE ) && ( ipconfigIPv4_BACKWARD_COMPATIBLE == 1 )
 
 /* Do not call the following function directly. It is there for downward compatibility.
