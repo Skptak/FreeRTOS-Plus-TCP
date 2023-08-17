@@ -78,7 +78,7 @@ jobs:
       - name: Clone This Repo
         uses: actions/checkout@v3
       - name: Run spellings check
-        uses: FreeRTOS/CI-CD-Github-Actions/rust-spell-check@main
+        Uses: FreeRTOS/CI-CD-GitHub-Actions//rust-spell-check@CI-CD-Overhaul
         with:
           path: ./
 
@@ -317,7 +317,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run manifest verifier
-        uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@main
+        uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@CI-CD-Overhaul
         with:
           path: ./
           fail-on-incorrect-version: true
