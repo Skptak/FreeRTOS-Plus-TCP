@@ -87,7 +87,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check formatting
-        uses: FreeRTOS/CI-CD-Github-Actions/formatting@main
+        uses: FreeRTOS/CI-CD-Github-Actions/formatting@CI-CD-Overhaul
         with:
           path: ./
 
