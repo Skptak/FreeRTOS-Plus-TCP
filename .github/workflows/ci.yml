@@ -78,7 +78,7 @@ jobs:
       - name: Clone This Repo
         uses: actions/checkout@v3
       - name: Run spellings check
-        uses: Skptak/CI-CD-Github-Actions/rust-spell-check@main
+        uses: FreeRTOS/CI-CD-Github-Actions/rust-spell-check@main
         with:
           path: ./
 
