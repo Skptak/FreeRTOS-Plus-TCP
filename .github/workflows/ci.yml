@@ -68,7 +68,7 @@ jobs:
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
       - name: Check Coverage
-        uses: Skptak/CI-CD-Github-Actions/coverage-cop@main
+        uses: FreeRTOS/CI-CD-Github-Actions/coverage-cop@CI-CD-Overhaul
         with:
           coverage-file: ./test/unit-test/build/coverage.info
 
@@ -96,7 +96,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run doxygen build
-        uses: Skptak/CI-CD-Github-Actions/doxygen@main
+        uses: FreeRTOS/CI-CD-Github-Actions/doxygen@CI-CD-Overhaul
         with:
           path: ./
 
@@ -107,7 +107,7 @@ jobs:
       - name: Check Links
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: Skptak/CI-CD-Github-Actions/link-verifier@main
+        uses: FreeRTOS/CI-CD-Github-Actions/link-verifier@CI-CD-Overhaul
 
   build-checks:
     runs-on: ubuntu-latest
@@ -327,7 +327,7 @@ jobs:
     runs-on: cbmc_ubuntu-latest_16-core
     steps:
       - name: Set up CBMC runner
-        uses: Skptak/CI-CD-Github-Actions/set_up_cbmc_runner@main
+        uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@CI-CD-Overhaul
         with:
           cbmc_version: "5.61.0"
 
@@ -345,6 +345,6 @@ jobs:
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
       - name: Run CBMC
-        uses: Skptak/CI-CD-Github-Actions/run_cbmc@main
+        uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@CI-CD-Overhaul
         with:
           proofs_dir: test/cbmc/proofs
