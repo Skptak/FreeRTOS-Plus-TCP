@@ -68,7 +68,7 @@ jobs:
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
       - name: Check Coverage
-        uses: FreeRTOS/CI-CD-Github-Actions/coverage-cop@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-Github-Actions/coverage-cop@v2
         with:
           coverage-file: ./test/unit-test/build/coverage.info
 
@@ -78,7 +78,7 @@ jobs:
       - name: Clone This Repo
         uses: actions/checkout@v3
       - name: Run spellings check
-        uses: FreeRTOS/CI-CD-GitHub-Actions/rust-spell-check@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-GitHub-Actions/rust-spell-check@v2
         with:
           path: ./
 
@@ -87,7 +87,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check formatting
-        uses: FreeRTOS/CI-CD-Github-Actions/formatting@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-Github-Actions/formatting@v2
         with:
           path: ./
 
@@ -96,7 +96,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run doxygen build
-        uses: FreeRTOS/CI-CD-Github-Actions/doxygen@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-Github-Actions/doxygen@v2
         with:
           path: ./
 
@@ -107,7 +107,7 @@ jobs:
       - name: Check Links
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: FreeRTOS/CI-CD-Github-Actions/link-verifier@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-Github-Actions/link-verifier@v2
 
   build-checks:
     runs-on: ubuntu-latest
@@ -324,7 +324,7 @@ jobs:
         run: git submodule update --checkout --init --recursive
 
       - name: Run manifest verifier
-        uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-GitHub-Actions/manifest-verifier@v2
         with:
           path: ./
           fail-on-incorrect-version: true
@@ -334,7 +334,7 @@ jobs:
     runs-on: cbmc_ubuntu-latest_16-core
     steps:
       - name: Set up CBMC runner
-        uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-Github-Actions/set_up_cbmc_runner@v2
         with:
           cbmc_version: "5.61.0"
 
@@ -352,6 +352,6 @@ jobs:
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
       - name: Run CBMC
-        uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@CI-CD-Overhaul
+        uses: FreeRTOS/CI-CD-Github-Actions/run_cbmc@v2
         with:
           proofs_dir: test/cbmc/proofs

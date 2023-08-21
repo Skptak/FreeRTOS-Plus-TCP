@@ -28,7 +28,7 @@ jobs:
           git checkout -b ${{ github.event.inputs.version_number }} ${{
           github.event.inputs.commit_id }}
       - name: Generate SBOM
-        Uses: FreeRTOS/CI-CD-GitHub-Actions//sbom-generator@CI-CD-Overhaul
+        Uses: FreeRTOS/CI-CD-GitHub-Actions//sbom-generator@v2
         with:
           repo_path: ./
           source_path: ./source
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Doxygen generation
-        Uses: FreeRTOS/CI-CD-GitHub-Actions//doxygen-generation@CI-CD-Overhaul
+        Uses: FreeRTOS/CI-CD-GitHub-Actions//doxygen-generation@v2
         with:
           ref: ${{ github.event.inputs.version_number }}
           add_release: "true"
