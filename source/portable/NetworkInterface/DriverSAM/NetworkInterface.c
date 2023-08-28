@@ -708,7 +708,7 @@ static BaseType_t prvGMACInit( NetworkInterface_t * pxInterface )
 
     #if ( ipconfigUSE_LLMNR == 1 )
         {
-            prvAddMulticastMACAddress( xLLMNR_MacAdress.ucBytes );
+            prvAddMulticastMACAddress( xLLMNR_MacAddress.ucBytes );
         }
     #endif /* ipconfigUSE_LLMNR */
 
@@ -717,7 +717,7 @@ static BaseType_t prvGMACInit( NetworkInterface_t * pxInterface )
             NetworkEndPoint_t * pxEndPoint;
             #if ( ipconfigUSE_LLMNR == 1 )
                 {
-                    prvAddMulticastMACAddress( xLLMNR_MacAdressIPv6.ucBytes );
+                    prvAddMulticastMACAddress( xLLMNR_MacAddressIPv6.ucBytes );
                 }
             #endif /* ipconfigUSE_LLMNR */
 

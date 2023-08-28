@@ -26,7 +26,7 @@ set( MODULE_ROOT_DIR ${__MODULE_ROOT_DIR} CACHE INTERNAL "FreeRTOS-Plus-TCP repo
 # Set the kernel directory
 set( KERNEL_DIRECTORY ${MODULE_ROOT_DIR}/test/FreeRTOS-Kernel )
 
-# If the kernel is not submoduled, download it.
+# If the kernel is not a submodule, download it.
 if( NOT EXISTS ${KERNEL_DIRECTORY}/include )
     # Inform the user of the actions
     message( STATUS "FreeRTOS-Kernel is required for this build. Submoduling it..." )

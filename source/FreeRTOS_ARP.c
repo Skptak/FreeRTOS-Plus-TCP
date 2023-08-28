@@ -1017,7 +1017,7 @@ static BaseType_t prvFindCacheEntry( const MACAddress_t * pxMACAddress,
  *                          address of a gateway.
  * @param[in] pxMACAddress In case the MAC-address is found in cache, it will be
  *                          stored to the buffer provided.
- * @param[out] ppxEndPoint The end-point of the gateway will be copy to the pointee.
+ * @param[out] ppxEndPoint The end-point of the gateway will be copy to the pointer.
  */
     static eARPLookupResult_t eARPGetCacheEntryGateWay( uint32_t * pulIPAddress,
                                                         MACAddress_t * const pxMACAddress,
@@ -1026,7 +1026,7 @@ static BaseType_t prvFindCacheEntry( const MACAddress_t * pxMACAddress,
         eARPLookupResult_t eReturn = eARPCacheMiss;
         uint32_t ulAddressToLookup = *( pulIPAddress );
         NetworkEndPoint_t * pxEndPoint;
-        uint32_t ulOrginal = *pulIPAddress;
+        uint32_t ulOriginal = *pulIPAddress;
 
         /* It is assumed that devices with the same netmask are on the same
          * LAN and don't need a gateway. */
@@ -1084,10 +1084,10 @@ static BaseType_t prvFindCacheEntry( const MACAddress_t * pxMACAddress,
             {
                 eReturn = prvCacheLookup( ulAddressToLookup, pxMACAddress, ppxEndPoint );
 
-                if( ( eReturn != eARPCacheHit ) || ( ulOrginal != ulAddressToLookup ) )
+                if( ( eReturn != eARPCacheHit ) || ( ulOriginal != ulAddressToLookup ) )
                 {
                     FreeRTOS_debug_printf( ( "ARP %xip %s using %xip\n",
-                                             ( unsigned ) FreeRTOS_ntohl( ulOrginal ),
+                                             ( unsigned ) FreeRTOS_ntohl( ulOriginal ),
                                              ( eReturn == eARPCacheHit ) ? "hit" : "miss",
                                              ( unsigned ) FreeRTOS_ntohl( ulAddressToLookup ) ) );
                 }

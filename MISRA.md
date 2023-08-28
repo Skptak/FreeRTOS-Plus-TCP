@@ -111,7 +111,7 @@ _Ref 11.4.2_
 _Ref 11.4.3_
 
 - MISRA Rule 11.4 warns about casting pointer to an integer and vice versa.
-        Here, the poiner to the starting byte of the packet is cast to an
+        Here, the pointer to the starting byte of the packet is cast to an
         integer which is then used to see whether the pointer is well
         aligned or not. It is not used to access any pointer values. Thus, this
         violation can be safely suppressed.
@@ -139,7 +139,7 @@ _Ref 11.8.1_
 - MISRA c-2012 Rule 11.8 warns about removing the `const` qualifier when
         assigning one value to another. In this case however, a function
         pointer is being copied. It doesn't make sense in case of function
-        pointers for the pointee to be const or mutable. Thus, this rule is
+        pointers for the pointer to be const or mutable. Thus, this rule is
         safe to suppress.
 1
 #### Rule 14.3
@@ -173,7 +173,7 @@ _Ref 20.5.1_
 #### Rule 20.10
 _Ref 20.10.1_
 
-- MISRA C-2012 Rule 20.10 warns against the use of ## concatination operator.
+- MISRA C-2012 Rule 20.10 warns against the use of ## concatenation operator.
         However, in this case, it must be used to support compile time
         assertions in case the preprocessor does not suppport sizeof. This
         operation (assert) has no runtime execution.

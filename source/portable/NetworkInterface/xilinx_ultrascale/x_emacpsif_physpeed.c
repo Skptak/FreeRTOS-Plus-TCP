@@ -954,7 +954,7 @@ static uint32_t get_IEEE_phy_speed_US( XEmacPs * xemacpsp,
 
     FreeRTOS_printf( ( "Start %s PHY autonegotiation. ID = 0x%04X\n", pcPHYName, phy_identity ) );
 
-    /* Just to prevent compiler warnings about unused variablies. */
+    /* Just to prevent compiler warnings about unused variables. */
     ( void ) pcPHYName;
 
     switch( phy_identity )

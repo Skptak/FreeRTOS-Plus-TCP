@@ -130,7 +130,7 @@
  *     Here an example of the total size:
  *
  *         #define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS    24
- *         #define GMAC_FRAME_LENTGH_MAX                     1536
+ *         #define GMAC_FRAME_LENGTH_MAX                     1536
  *         Hidden space for back-pointer and IP-type         16
  *
  *     Total size: 24 * ( 1536 + 16 ) = 37248 bytes

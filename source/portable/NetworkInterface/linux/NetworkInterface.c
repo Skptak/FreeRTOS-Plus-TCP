@@ -498,7 +498,7 @@ static int prvSetDeviceModes()
 
         if( ( ret != 0 ) && ( ret != PCAP_ERROR_ACTIVATED ) )
         {
-            FreeRTOS_printf( ( "coult not activate promisuous mode\n" ) );
+            FreeRTOS_printf( ( "coult not activate promisc mode\n" ) );
             break;
         }
 
@@ -858,7 +858,7 @@ static void * prvLinuxPcapSendThread( void * pvParam )
         {
             uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &xLength, sizeof( xLength ), pdFALSE );
             uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) ucBuffer, xLength, pdFALSE );
-            FreeRTOS_debug_printf( ( "Sending  ========== > data pcap_sendpadcket %lu\n", xLength ) );
+            FreeRTOS_debug_printf( ( "Sending  ========== > data pcap_sendpacket %lu\n", xLength ) );
             print_hex( ucBuffer, xLength );
 
             if( pcap_sendpacket( pxOpenedInterfaceHandle, ucBuffer, ( int ) xLength ) != 0 )

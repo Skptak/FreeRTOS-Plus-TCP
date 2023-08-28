@@ -92,7 +92,7 @@
     #define GMAC_TXD_LEN_MASK          ( 0x1FFF )    /**< Length of buffer */
 
 /** The MAC can support frame lengths up to 1536 bytes */
-    #define GMAC_FRAME_LENTGH_MAX      1536
+    #define GMAC_FRAME_LENGTH_MAX      1536
 
     #define GMAC_RX_UNITSIZE           128  /**< Fixed size for RX buffer  */
     #define GMAC_TX_UNITSIZE           1518 /**< Size for ETH frame length */
@@ -1304,7 +1304,7 @@
  * to trace the actual size of the data received.
  * \code
  * static gmac_device_t gs_gmac_dev;
- * static volatile uint8_t gs_uc_eth_buffer[GMAC_FRAME_LENTGH_MAX];
+ * static volatile uint8_t gs_uc_eth_buffer[GMAC_FRAME_LENGTH_MAX];
  *
  * uint32_t ul_frm_size;
  * \endcode

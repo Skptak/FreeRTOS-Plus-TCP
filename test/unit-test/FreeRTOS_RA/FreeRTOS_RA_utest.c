@@ -864,7 +864,7 @@ void test_vReceiveRA_ValidICMPPrefix_IncorrectOption( void )
 /**
  * @brief This function verify vReceiveRA success case.
  */
-void test_vReceiveRA_vRAProcesss( void )
+void test_vReceiveRA_vRAProcess( void )
 {
     NetworkBufferDescriptor_t * pxNetworkBuffer, xNetworkBuffer, xNetworkBuffer2;
     ICMPPacket_IPv6_t xICMPPacket;

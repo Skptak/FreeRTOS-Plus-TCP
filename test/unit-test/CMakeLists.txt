@@ -27,7 +27,7 @@ set( UNIT_TEST_DIR ${MODULE_ROOT_DIR}/test/unit-test CACHE INTERNAL "Unit-test d
 
 set( KERNEL_DIRECTORY ${MODULE_ROOT_DIR}/test/FreeRTOS-Kernel )
 
-# See if FreRTOS-Kernel is submoduled
+# See if there is a FreRTOS-Kernel submodule
 if( NOT EXISTS ${KERNEL_DIRECTORY}/include )
     # Inform the user of the actions
     message( STATUS "FreeRTOS-Kernel is required for this build. Submoduling it..." )
@@ -200,7 +200,7 @@ include( ${UNIT_TEST_DIR}/TCPFilePaths.cmake )
 
 
 # ===========================================================================
-# Remove static qualifier from the souce files so that internal functions
+# Remove static qualifier from the source files so that internal functions
 # can be called directly.
 file( MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Annexed_TCP_Sources )
 

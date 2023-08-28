@@ -24,7 +24,7 @@
  *      @brief: TI's Code Generation Tools do not add a trailing directive for packing structures
  *
  *      Contains a semicolon to end the wrapped structure,
- *      and resets warnings that were supressed in pack_struct_start.h.
+ *      and resets warnings that were suppressed in pack_struct_start.h.
  *      It also pops the previously pushed alignment of 1 byte of the stack.
  */
 ;
