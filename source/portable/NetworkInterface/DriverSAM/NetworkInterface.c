@@ -728,10 +728,12 @@ static BaseType_t prvGMACInit( NetworkInterface_t * pxInterface )
     GMAC->GMAC_NCR |= GMAC_NCR_MPE;
 
     memset( &gmac_option, '\0', sizeof( gmac_option ) );
-    /* Note that 'gmac_option.uc_copy_all_frame' is false, do not copy all frames.
-     * And 'gmac_option.uc_no_boardcast' is false, meaning that broadcast is received.
-     * 'boardcast' is a typo. */
-    memcpy( gmac_option.uc_mac_addr, pxEndPoint->xMACAddress.ucBytes, sizeof( gmac_option.uc_mac_addr ) );
+    /* Note that 'gmac_option.uc_copy_all_frame' is false, do not copy all
+     * frames. And 'gmac_option.uc_no_boardcast' is false, meaning that
+     * broadcast is received. 'boardcast' is a typo. */
+    memcpy( gmac_option.uc_mac_addr,
+            pxEndPoint->xMACAddress.ucBytes,
+            sizeof( gmac_option.uc_mac_addr ) );
 
     gs_gmac_dev.p_hw = GMAC;
     gmac_dev_init( GMAC, &gs_gmac_dev, &gmac_option );
@@ -1097,8 +1099,10 @@ static uint32_t prvEMACRxPoll( void )
 
             if( xSendEventStructToIPTask( &xRxEvent, xBlockTime ) != pdTRUE )
             {
-                /* xSendEventStructToIPTask() timed out. Release the descriptor. */
-                FreeRTOS_printf( ( "prvEMACRxPoll: Can not queue a packet!\n" ) );
+                /* xSendEventStructToIPTask() timed out. Release the descriptor.
+                 */
+                FreeRTOS_printf(
+                    ( "prvEMACRxPoll: Can not queue a packet!\n" ) );
                 xRelease = pdTRUE;
             }
         }

@@ -42,8 +42,8 @@
  */
 
 /*
- * Support and FAQ: visit <a href="https://www.microchip.com/en-us/support/design-help">Atmel
- * Support</a>
+ * Support and FAQ: visit <a
+ * href="https://www.microchip.com/en-us/support/design-help">Atmel Support</a>
  */
 
 /* Standard includes. */
@@ -648,10 +648,11 @@ uint32_t gmac_dev_read( gmac_device_t * p_gmac_dev,
      * the current position 'ul_rx_idx'
      */
     nextIdx = p_gmac_dev->ul_rx_idx;
- 
-    #if ( NETWORK_BUFFERS_CACHED != 0 ) && ( __DCACHE_PRESENT != 0 ) && defined( CONF_BOARD_ENABLE_CACHE )
-        SCB_InvalidateDCache();
-    #endif
+
+#if( NETWORK_BUFFERS_CACHED != 0 ) && ( __DCACHE_PRESENT != 0 ) && \
+    defined( CONF_BOARD_ENABLE_CACHE )
+    SCB_InvalidateDCache();
+#endif
 
 #if( ipconfigZERO_COPY_RX_DRIVER == 0 )
     {
@@ -676,20 +677,22 @@ uint32_t gmac_dev_read( gmac_device_t * p_gmac_dev,
                 left = min( bytesLeft + 2, ( int32_t ) ul_frame_size );
                 toCopy = ( GMAC_RX_BUFFERS - nextIdx ) * GMAC_RX_UNITSIZE;
 
-            if( toCopy > left )
-            {
-                toCopy = left;
-            }
+                if( toCopy > left )
+                {
+                    toCopy = left;
+                }
 
-            memcpy( p_frame, source, toCopy );
-            left -= toCopy;
+                memcpy( p_frame, source, toCopy );
+                left -= toCopy;
 
-            if( left != 0ul )
-            {
-                memcpy( p_frame + toCopy, ( void * ) gs_uc_rx_buffer, left );
+                if( left != 0ul )
+                {
+                    memcpy( p_frame + toCopy,
+                            ( void * ) gs_uc_rx_buffer,
+                            left );
+                }
             }
         }
-    }
 #else  /* ipconfigZERO_COPY_RX_DRIVER */
     {
         if( p_frame != NULL )
@@ -711,131 +714,132 @@ uint32_t gmac_dev_read( gmac_device_t * p_gmac_dev,
     }
 #endif /* ipconfigZERO_COPY_RX_DRIVER */
 
-    do
-    {
-        pxHead = &gs_rx_desc[ nextIdx ];
-        pxHead->addr.val &= ~( GMAC_RXD_OWNERSHIP );
-        circ_inc32( &nextIdx, GMAC_RX_BUFFERS );
-
-        if( pxHead->addr.val )
+        do
         {
-            /* Just read it back to make sure that
-             * it was written to SRAM. */
+            pxHead = &gs_rx_desc[ nextIdx ];
+            pxHead->addr.val &= ~( GMAC_RXD_OWNERSHIP );
+            circ_inc32( &nextIdx, GMAC_RX_BUFFERS );
+
+            if( pxHead->addr.val )
+            {
+                /* Just read it back to make sure that
+                 * it was written to SRAM. */
+            }
+        } while( ( pxHead->status.val & GMAC_RXD_EOF ) == 0 );
+
+        p_gmac_dev->ul_rx_idx = nextIdx;
+
+        return GMAC_OK;
+    }
+
+    /**
+     * \brief Send ulLength bytes from pcFrom. This copies the buffer to one of
+     * the GMAC Tx buffers, and then indicates to the GMAC that the buffer is
+     * ready. If lEndOfFrame is true then the data being copied is the end of
+     * the frame and the frame can be transmitted.
+     *
+     * \param p_gmac_dev Pointer to the GMAC device instance.
+     * \param p_buffer       Pointer to the data buffer.
+     * \param ul_size    Length of the frame.
+     *
+     * \return Length sent.
+     */
+    uint32_t gmac_dev_write( gmac_device_t * p_gmac_dev,
+                             void * p_buffer,
+                             uint32_t ul_size )
+    {
+        volatile gmac_tx_descriptor_t * p_tx_td;
+
+        Gmac * p_hw = p_gmac_dev->p_hw;
+
+        configASSERT( p_buffer != NULL );
+        configASSERT( ul_size >= ipconfigETHERNET_MINIMUM_PACKET_BYTES );
+
+        /* Check parameter */
+        if( ul_size > GMAC_TX_UNITSIZE )
+        {
+            return GMAC_PARAM;
         }
-    } while( ( pxHead->status.val & GMAC_RXD_EOF ) == 0 );
 
-    p_gmac_dev->ul_rx_idx = nextIdx;
+        /* Pointers to the current transmit descriptor */
+        p_tx_td = &gs_tx_desc[ p_gmac_dev->l_tx_head ];
 
-    return GMAC_OK;
-}
+        /* If no free TxTd, buffer can't be sent, schedule the wakeup callback
+         */
+        if( ( p_tx_td->status.val & GMAC_TXD_USED ) == 0 )
+        {
+            return GMAC_TX_BUSY;
+        }
 
-/**
- * \brief Send ulLength bytes from pcFrom. This copies the buffer to one of the
- * GMAC Tx buffers, and then indicates to the GMAC that the buffer is ready.
- * If lEndOfFrame is true then the data being copied is the end of the frame
- * and the frame can be transmitted.
- *
- * \param p_gmac_dev Pointer to the GMAC device instance.
- * \param p_buffer       Pointer to the data buffer.
- * \param ul_size    Length of the frame.
- *
- * \return Length sent.
- */
-uint32_t gmac_dev_write( gmac_device_t * p_gmac_dev,
-                         void * p_buffer,
-                         uint32_t ul_size )
-{
-    volatile gmac_tx_descriptor_t * p_tx_td;
-
-    Gmac * p_hw = p_gmac_dev->p_hw;
-
-    configASSERT( p_buffer != NULL );
-    configASSERT( ul_size >= ipconfigETHERNET_MINIMUM_PACKET_BYTES );
-
-    /* Check parameter */
-    if( ul_size > GMAC_TX_UNITSIZE )
-    {
-        return GMAC_PARAM;
-    }
-
-    /* Pointers to the current transmit descriptor */
-    p_tx_td = &gs_tx_desc[ p_gmac_dev->l_tx_head ];
-
-    /* If no free TxTd, buffer can't be sent, schedule the wakeup callback */
-    if( ( p_tx_td->status.val & GMAC_TXD_USED ) == 0 )
-    {
-        return GMAC_TX_BUSY;
-    }
-
-    /* Set up/copy data to transmission buffer */
-    if( p_buffer && ul_size )
-    {
+        /* Set up/copy data to transmission buffer */
+        if( p_buffer && ul_size )
+        {
 /* Driver manages the ring buffer */
 
 /* Calculating the checksum here is faster than calculating it from the GMAC
  * buffer because within p_buffer, it is well aligned */
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
-        {
-            /* Zero-copy... */
-            p_tx_td->addr = ( uint32_t ) p_buffer;
-        }
+            {
+                /* Zero-copy... */
+                p_tx_td->addr = ( uint32_t ) p_buffer;
+            }
 #else
         {
             /* Or memcopy... */
             memcpy( ( void * ) p_tx_td->addr, p_buffer, ul_size );
         }
 #endif /* ipconfigZERO_COPY_TX_DRIVER */
-        {
-            /* Needs to be called for SAM4E series only. */
-            vGMACGenerateChecksum( ( uint8_t * ) p_tx_td->addr,
-                                   ( size_t ) ul_size );
+            {
+                /* Needs to be called for SAM4E series only. */
+                vGMACGenerateChecksum( ( uint8_t * ) p_tx_td->addr,
+                                       ( size_t ) ul_size );
+            }
         }
+
+        /* Update transmit descriptor status */
+
+        /* The buffer size defined is the length of ethernet frame,
+         * so it's always the last buffer of the frame. */
+        if( p_gmac_dev->l_tx_head == ( int32_t ) ( GMAC_TX_BUFFERS - 1 ) )
+        {
+            /* No need to 'and' with GMAC_TXD_LEN_MASK because ul_size has been
+             * checked GMAC_TXD_USED will now be cleared. */
+            p_tx_td->status.val = ul_size | GMAC_TXD_LAST | GMAC_TXD_WRAP;
+        }
+        else
+        {
+            /* GMAC_TXD_USED will now be cleared. */
+            p_tx_td->status.val = ul_size | GMAC_TXD_LAST;
+        }
+
+        if( p_tx_td->status.val )
+        {
+            /* Just read it back to make sure that
+             * it was written to SRAM. */
+        }
+
+        circ_inc32( &p_gmac_dev->l_tx_head, GMAC_TX_BUFFERS );
+
+        /* Now start to transmit if it is still not done */
+        gmac_start_transmission( p_hw );
+
+        return GMAC_OK;
     }
 
-    /* Update transmit descriptor status */
-
-    /* The buffer size defined is the length of ethernet frame,
-     * so it's always the last buffer of the frame. */
-    if( p_gmac_dev->l_tx_head == ( int32_t ) ( GMAC_TX_BUFFERS - 1 ) )
+    /**
+     * \brief Get current load of transmit.
+     *
+     * \param p_gmac_dev Pointer to the GMAC device instance.
+     *
+     * \return Current load of transmit.
+     */
+    uint32_t gmac_dev_get_tx_load( gmac_device_t * p_gmac_dev )
     {
-        /* No need to 'and' with GMAC_TXD_LEN_MASK because ul_size has been
-         * checked GMAC_TXD_USED will now be cleared. */
-        p_tx_td->status.val = ul_size | GMAC_TXD_LAST | GMAC_TXD_WRAP;
+        uint16_t us_head = p_gmac_dev->l_tx_head;
+        uint16_t us_tail = p_gmac_dev->l_tx_tail;
+
+        return CIRC_CNT( us_head, us_tail, GMAC_TX_BUFFERS );
     }
-    else
-    {
-        /* GMAC_TXD_USED will now be cleared. */
-        p_tx_td->status.val = ul_size | GMAC_TXD_LAST;
-    }
-
-    if( p_tx_td->status.val )
-    {
-        /* Just read it back to make sure that
-         * it was written to SRAM. */
-    }
-
-    circ_inc32( &p_gmac_dev->l_tx_head, GMAC_TX_BUFFERS );
-
-    /* Now start to transmit if it is still not done */
-    gmac_start_transmission( p_hw );
-
-    return GMAC_OK;
-}
-
-/**
- * \brief Get current load of transmit.
- *
- * \param p_gmac_dev Pointer to the GMAC device instance.
- *
- * \return Current load of transmit.
- */
-uint32_t gmac_dev_get_tx_load( gmac_device_t * p_gmac_dev )
-{
-    uint16_t us_head = p_gmac_dev->l_tx_head;
-    uint16_t us_tail = p_gmac_dev->l_tx_tail;
-
-    return CIRC_CNT( us_head, us_tail, GMAC_TX_BUFFERS );
-}
 
 /**
  *  \brief Register/Clear TX wakeup callback.
@@ -858,193 +862,194 @@ uint32_t gmac_dev_get_tx_load( gmac_device_t * p_gmac_dev )
  * \return GMAC_OK, GMAC_PARAM on parameter error.
  */
 #if( GMAC_USES_WAKEUP_CALLBACK )
-uint8_t gmac_dev_set_tx_wakeup_callback( gmac_device_t * p_gmac_dev,
-                                         gmac_dev_wakeup_cb_t func_wakeup_cb,
-                                         uint8_t uc_threshold )
-{
-    if( func_wakeup_cb == NULL )
+    uint8_t gmac_dev_set_tx_wakeup_callback( gmac_device_t * p_gmac_dev,
+                                             gmac_dev_wakeup_cb_t func_wakeup_cb,
+                                             uint8_t uc_threshold )
     {
-        p_gmac_dev->func_wakeup_cb = NULL;
-    }
-    else
-    {
-        if( uc_threshold <= GMAC_TX_BUFFERS )
+        if( func_wakeup_cb == NULL )
         {
-            p_gmac_dev->func_wakeup_cb = func_wakeup_cb;
-            p_gmac_dev->ul_wakeup_threshold = ( uint32_t ) uc_threshold;
+            p_gmac_dev->func_wakeup_cb = NULL;
         }
         else
         {
-            return GMAC_PARAM;
+            if( uc_threshold <= GMAC_TX_BUFFERS )
+            {
+                p_gmac_dev->func_wakeup_cb = func_wakeup_cb;
+                p_gmac_dev->ul_wakeup_threshold = ( uint32_t ) uc_threshold;
+            }
+            else
+            {
+                return GMAC_PARAM;
+            }
         }
-    }
 
-    return GMAC_OK;
-}
+        return GMAC_OK;
+    }
 #endif /* GMAC_USES_WAKEUP_CALLBACK */
 
-/**
- * \brief Reset TX & RX queue & statistics.
- *
- * \param p_gmac_dev   Pointer to GMAC device instance.
- */
-void gmac_dev_reset( gmac_device_t * p_gmac_dev )
-{
-    Gmac * p_hw = p_gmac_dev->p_hw;
-
-    gmac_reset_rx_mem( p_gmac_dev );
-    gmac_reset_tx_mem( p_gmac_dev );
-    gmac_network_control( p_hw,
-                          GMAC_NCR_TXEN | GMAC_NCR_RXEN | GMAC_NCR_WESTAT |
-                              GMAC_NCR_CLRSTAT );
-}
-
-void gmac_dev_halt( Gmac * p_gmac );
-
-void gmac_dev_halt( Gmac * p_gmac )
-{
-    gmac_network_control( p_gmac, GMAC_NCR_WESTAT | GMAC_NCR_CLRSTAT );
-    gmac_disable_interrupt( p_gmac, ~0u );
-}
-
-/**
- * \brief GMAC Interrupt handler.
- *
- * \param p_gmac_dev   Pointer to GMAC device instance.
- */
-
-#if( GMAC_STATS != 0 )
-void gmac_show_irq_counts()
-{
-    int index;
-
-    for( index = 0; index < ARRAY_SIZE( intPairs ); index++ )
+    /**
+     * \brief Reset TX & RX queue & statistics.
+     *
+     * \param p_gmac_dev   Pointer to GMAC device instance.
+     */
+    void gmac_dev_reset( gmac_device_t * p_gmac_dev )
     {
-        if( gmacStats.intStatus[ intPairs[ index ].index ] )
-        {
-            FreeRTOS_printf(
-                ( "%s : %6u\n",
-                  intPairs[ index ].name,
-                  gmacStats.intStatus[ intPairs[ index ].index ] ) );
-        }
+        Gmac * p_hw = p_gmac_dev->p_hw;
+
+        gmac_reset_rx_mem( p_gmac_dev );
+        gmac_reset_tx_mem( p_gmac_dev );
+        gmac_network_control( p_hw,
+                              GMAC_NCR_TXEN | GMAC_NCR_RXEN | GMAC_NCR_WESTAT |
+                                  GMAC_NCR_CLRSTAT );
     }
-}
-#endif /* if ( GMAC_STATS != 0 ) */
 
-void gmac_handler( gmac_device_t * p_gmac_dev )
-{
-    Gmac * p_hw = p_gmac_dev->p_hw;
+    void gmac_dev_halt( Gmac * p_gmac );
 
-    gmac_tx_descriptor_t * p_tx_td;
-    uint32_t ul_tx_status_flag;
-
-#if( GMAC_STATS != 0 )
-    int index;
-#endif
-
-    uint32_t ul_isr = gmac_get_interrupt_status( p_hw );
-    uint32_t ul_rsr = gmac_get_rx_status( p_hw );
-    uint32_t ul_tsr = gmac_get_tx_status( p_hw );
-
-#if( GMAC_STATS != 0 )
+    void gmac_dev_halt( Gmac * p_gmac )
     {
+        gmac_network_control( p_gmac, GMAC_NCR_WESTAT | GMAC_NCR_CLRSTAT );
+        gmac_disable_interrupt( p_gmac, ~0u );
+    }
+
+    /**
+     * \brief GMAC Interrupt handler.
+     *
+     * \param p_gmac_dev   Pointer to GMAC device instance.
+     */
+
+#if( GMAC_STATS != 0 )
+    void gmac_show_irq_counts()
+    {
+        int index;
+
         for( index = 0; index < ARRAY_SIZE( intPairs ); index++ )
         {
-            if( ul_isr & intPairs[ index ].mask )
+            if( gmacStats.intStatus[ intPairs[ index ].index ] )
             {
-                gmacStats.intStatus[ intPairs[ index ].index ]++;
+                FreeRTOS_printf(
+                    ( "%s : %6u\n",
+                      intPairs[ index ].name,
+                      gmacStats.intStatus[ intPairs[ index ].index ] ) );
             }
         }
     }
+#endif /* if ( GMAC_STATS != 0 ) */
+
+    void gmac_handler( gmac_device_t * p_gmac_dev )
+    {
+        Gmac * p_hw = p_gmac_dev->p_hw;
+
+        gmac_tx_descriptor_t * p_tx_td;
+        uint32_t ul_tx_status_flag;
+
+#if( GMAC_STATS != 0 )
+        int index;
+#endif
+
+        uint32_t ul_isr = gmac_get_interrupt_status( p_hw );
+        uint32_t ul_rsr = gmac_get_rx_status( p_hw );
+        uint32_t ul_tsr = gmac_get_tx_status( p_hw );
+
+#if( GMAC_STATS != 0 )
+        {
+            for( index = 0; index < ARRAY_SIZE( intPairs ); index++ )
+            {
+                if( ul_isr & intPairs[ index ].mask )
+                {
+                    gmacStats.intStatus[ intPairs[ index ].index ]++;
+                }
+            }
+        }
 #endif /* GMAC_STATS != 0 */
 
-    /* RX packet */
-    if( ( ul_isr & GMAC_ISR_RCOMP ) ||
-        ( ul_rsr & ( GMAC_RSR_REC | GMAC_RSR_RXOVR | GMAC_RSR_BNA ) ) )
-    {
-        /* Clear status */
-        gmac_clear_rx_status( p_hw, ul_rsr );
-
-        if( ul_isr & GMAC_ISR_RCOMP )
+        /* RX packet */
+        if( ( ul_isr & GMAC_ISR_RCOMP ) ||
+            ( ul_rsr & ( GMAC_RSR_REC | GMAC_RSR_RXOVR | GMAC_RSR_BNA ) ) )
         {
-            ul_rsr |= GMAC_RSR_REC;
-        }
+            /* Clear status */
+            gmac_clear_rx_status( p_hw, ul_rsr );
 
-        /* Invoke callbacks which can be useful to wake up a task */
-        xRxCallback( ul_rsr );
-    }
-
-    /* TX packet */
-    if( ( ul_isr & GMAC_ISR_TCOMP ) || ( ( ul_tsr & TSR_TSR_BITS ) != 0U ) )
-    {
-        ul_tx_status_flag = GMAC_TSR_TXCOMP;
-        /* A frame transmitted */
-
-        /* Check RLE */
-        if( ul_tsr & GMAC_TSR_RLE )
-        {
-            /* Status RLE & Number of discarded buffers */
-            ul_tx_status_flag = GMAC_TSR_RLE | CIRC_CNT( p_gmac_dev->l_tx_head,
-                                                         p_gmac_dev->l_tx_tail,
-                                                         GMAC_TX_BUFFERS );
-            gmac_reset_tx_mem( p_gmac_dev );
-            gmac_enable_transmit( p_hw, 1 );
-        }
-
-        /* Clear status */
-        gmac_clear_tx_status( p_hw, ul_tsr );
-
-        if( !CIRC_EMPTY( p_gmac_dev->l_tx_head, p_gmac_dev->l_tx_tail ) )
-        {
-            /* Check the buffers */
-            do
+            if( ul_isr & GMAC_ISR_RCOMP )
             {
-                p_tx_td = &gs_tx_desc[ p_gmac_dev->l_tx_tail ];
+                ul_rsr |= GMAC_RSR_REC;
+            }
 
-                /* Any error? Exit if buffer has not been sent yet */
-                if( ( p_tx_td->status.val & GMAC_TXD_USED ) == 0 )
+            /* Invoke callbacks which can be useful to wake up a task */
+            xRxCallback( ul_rsr );
+        }
+
+        /* TX packet */
+        if( ( ul_isr & GMAC_ISR_TCOMP ) || ( ( ul_tsr & TSR_TSR_BITS ) != 0U ) )
+        {
+            ul_tx_status_flag = GMAC_TSR_TXCOMP;
+            /* A frame transmitted */
+
+            /* Check RLE */
+            if( ul_tsr & GMAC_TSR_RLE )
+            {
+                /* Status RLE & Number of discarded buffers */
+                ul_tx_status_flag = GMAC_TSR_RLE |
+                                    CIRC_CNT( p_gmac_dev->l_tx_head,
+                                              p_gmac_dev->l_tx_tail,
+                                              GMAC_TX_BUFFERS );
+                gmac_reset_tx_mem( p_gmac_dev );
+                gmac_enable_transmit( p_hw, 1 );
+            }
+
+            /* Clear status */
+            gmac_clear_tx_status( p_hw, ul_tsr );
+
+            if( !CIRC_EMPTY( p_gmac_dev->l_tx_head, p_gmac_dev->l_tx_tail ) )
+            {
+                /* Check the buffers */
+                do
                 {
-                    break;
-                }
+                    p_tx_td = &gs_tx_desc[ p_gmac_dev->l_tx_tail ];
 
-                /* Notify upper layer that a packet has been sent */
-                xTxCallback( ul_tx_status_flag,
-                             ( void * ) p_tx_td->addr ); /* Function call
-                                                            prvTxCallback */
+                    /* Any error? Exit if buffer has not been sent yet */
+                    if( ( p_tx_td->status.val & GMAC_TXD_USED ) == 0 )
+                    {
+                        break;
+                    }
+
+                    /* Notify upper layer that a packet has been sent */
+                    xTxCallback( ul_tx_status_flag,
+                                 ( void * ) p_tx_td->addr ); /* Function call
+                                                                prvTxCallback */
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
-                {
-                    p_tx_td->addr = 0ul;
-                }
+                    {
+                        p_tx_td->addr = 0ul;
+                    }
 #endif /* ipconfigZERO_COPY_TX_DRIVER */
 
-                circ_inc32( &p_gmac_dev->l_tx_tail, GMAC_TX_BUFFERS );
-            } while( CIRC_CNT( p_gmac_dev->l_tx_head,
-                               p_gmac_dev->l_tx_tail,
-                               GMAC_TX_BUFFERS ) );
-        }
+                    circ_inc32( &p_gmac_dev->l_tx_tail, GMAC_TX_BUFFERS );
+                } while( CIRC_CNT( p_gmac_dev->l_tx_head,
+                                   p_gmac_dev->l_tx_tail,
+                                   GMAC_TX_BUFFERS ) );
+            }
 
-        if( ul_tsr & GMAC_TSR_RLE )
-        {
-            /* Notify upper layer RLE
-             * (GMAC_TSR) Retry Limit Exceeded */
-            xTxCallback( ul_tx_status_flag, NULL );
-        }
+            if( ul_tsr & GMAC_TSR_RLE )
+            {
+                /* Notify upper layer RLE
+                 * (GMAC_TSR) Retry Limit Exceeded */
+                xTxCallback( ul_tx_status_flag, NULL );
+            }
 
 #if( GMAC_USES_WAKEUP_CALLBACK )
 
-        /* If a wakeup has been scheduled, notify upper layer that it can
-         * send other packets, and the sending will be successful. */
-        if( ( CIRC_SPACE( p_gmac_dev->l_tx_head,
-                          p_gmac_dev->l_tx_tail,
-                          GMAC_TX_BUFFERS ) >=
-              p_gmac_dev->ul_wakeup_threshold ) &&
-            p_gmac_dev->func_wakeup_cb )
-        {
-            p_gmac_dev->func_wakeup_cb();
-        }
+            /* If a wakeup has been scheduled, notify upper layer that it can
+             * send other packets, and the sending will be successful. */
+            if( ( CIRC_SPACE( p_gmac_dev->l_tx_head,
+                              p_gmac_dev->l_tx_tail,
+                              GMAC_TX_BUFFERS ) >=
+                  p_gmac_dev->ul_wakeup_threshold ) &&
+                p_gmac_dev->func_wakeup_cb )
+            {
+                p_gmac_dev->func_wakeup_cb();
+            }
 #endif
+        }
     }
-}
 
 /*@} */
 

@@ -1091,8 +1091,9 @@ void test_vDHCPProcess_eWaitingOfferRecvfromFailsNoTimeout( void )
     TEST_ASSERT_EQUAL( eWaitingOffer, pxEndPoint->xDHCPData.eDHCPState );
 }
 
-void test_vDHCPProcess_eWaitingOfferRecvfromFailsTimeoutGiveUp( void ) /* prvCloseDHCPSocket
-                                                                        */
+void test_vDHCPProcess_eWaitingOfferRecvfromFailsTimeoutGiveUp(
+    void ) /* prvCloseDHCPSocket
+            */
 {
     struct xSOCKET xTestSocket;
     TickType_t xTimeValue = 1234;
@@ -5956,10 +5957,11 @@ void test_vDHCPProcess_eGetLinkLayerAddress_Timeout_NoARPIPClash( void )
                        pxEndPoint->xDHCPData.eDHCPState );
 }
 
-void test_vDHCPProcess_eGetLinkLayerAddress_Timeout_ARPIPClash( void ) /* prvPrepareLinkLayerIPLookUp
-                                                                          +
-                                                                          prvCloseDHCPSocket
-                                                                        */
+void test_vDHCPProcess_eGetLinkLayerAddress_Timeout_ARPIPClash(
+    void ) /* prvPrepareLinkLayerIPLookUp
+              +
+              prvCloseDHCPSocket
+            */
 {
     struct xSOCKET xTestSocket;
     TickType_t xTimeValue = 1234;
