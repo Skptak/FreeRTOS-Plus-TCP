@@ -380,6 +380,11 @@ static BaseType_t prvNXP1060_NetworkInterfaceInitialise(
 
             if( xStatus != kStatus_Success )
             {
+                if( !xFirstCall )
+                {
+                    xTaskNotify( receiveTaskHandle, DRIVER_READY, eSetValueWithOverwrite );
+                }
+
                 break;
             }
             else
@@ -404,7 +409,7 @@ static BaseType_t prvNXP1060_NetworkInterfaceInitialise(
                     xTaskCreated = xTaskCreate( prvEMACHandlerTask,
                                                 "EMAC-Handler",
                                                 configMINIMAL_STACK_SIZE * 3,
-                                                NULL,
+                                                pxInterface,
                                                 configMAX_PRIORITIES - 1,
                                                 &receiveTaskHandle );
 
@@ -545,10 +550,7 @@ static void prvEMACHandlerTask( void * parameter )
         if( ulTaskNotifyTake( pdTRUE, pdMS_TO_TICKS( 500 ) ) == pdFALSE )
         {
             /* No RX packets for a bit so check for a link. */
-            const IPStackEvent_t xNetworkEventDown = {
-                .eEventType = eNetworkDownEvent,
-                .pvData = NULL
-            };
+            const IPStackEvent_t xNetworkEventDown = { .eEventType = eNetworkDownEvent, .pvData = parameter };
 
             do
             {
@@ -616,21 +618,14 @@ static void prvEMACHandlerTask( void * parameter )
                         receiving = pdFALSE;
                         break;
 
-                    case kStatus_ENET_RxFrameError: /* Received an error frame.
-                                                       Read & drop it */
-                        PRINTF( "RX Receive Error\n" );
-                        ENET_ReadFrame( ethernetifLocal->base,
-                                        &( ethernetifLocal->handle ),
-                                        NULL,
-                                        0,
-                                        0,
-                                        NULL );
-                        /* Not sure if a trace is required.  The MAC had an
-                         * error and needed to dump bytes */
+                    case kStatus_ENET_RxFrameError: /* Received an error frame.  Read & drop it */
+                        FreeRTOS_printf( ( "RX Receive Error\n" ) );
+                        ENET_ReadFrame( ethernetifLocal->base, &( ethernetifLocal->handle ), NULL, 0, 0, NULL );
+                        /* Not sure if a trace is required.  The MAC had an error and needed to dump bytes */
                         break;
 
                     default:
-                        PRINTF( "RX Receive default" );
+                        FreeRTOS_printf( ( "RX Receive default" ) );
                         break;
                 }
             }
