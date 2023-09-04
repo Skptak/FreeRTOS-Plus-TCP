@@ -26,8 +26,8 @@
  */
 
 /**
- * @file FreeRTOS_DNS.c
- * @brief Implements the Domain Name System for the FreeRTOS+TCP network stack.
+ * @file FreeRTOS_DNS.c      
+ * @brief Implements the Domain Name System for the FreeRTOS+TCP network stack.       
  */
 
 /* Standard includes. */
@@ -45,7 +45,7 @@
 #include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_DNS.h"
-#include "FreeRTOS_DHCP.h"
+#include "FreeRTOS_DHCP.h"    
 #include "NetworkBufferManagement.h"
 #include "FreeRTOS_Routing.h"
 #include "NetworkInterface.h"
@@ -63,7 +63,7 @@
 /*
  * Create the DNS message in the zero copy buffer passed in the first parameter.
  */
-    static size_t prvCreateDNSMessage( uint8_t * pucUDPPayloadBuffer,
+    static size_t prvCreateDNSMessage(          uint8_t * pucUDPPayloadBuffer,
                                        const char * pcHostName,
                                        TickType_t uxIdentifier,
                                        UBaseType_t uxHostType );
@@ -136,7 +136,7 @@
             { /* ff02::fb */
                 0xff, 0x02,
                 0x00, 0x00,
-                0x00, 0x00,
+                        0x00, 0x00,
                 0x00, 0x00,
                 0x00, 0x00,
                 0x00, 0x00,
@@ -246,14 +246,14 @@
  * @return Zero when the operation was successful, otherwise a negative errno value.
  */
         BaseType_t FreeRTOS_getaddrinfo( const char * pcName,                      /* The name of the node or device */
-                                         const char * pcService,                   /* Ignored for now. */
+                                         const char * pcService,                                /* Ignored for now. */
                                          const struct freertos_addrinfo * pxHints, /* If not NULL: preferences. */
                                          struct freertos_addrinfo ** ppxResult )   /* An allocated struct, containing the results. */
         {
             /* Call the asynchronous version with NULL parameters. */
             return FreeRTOS_getaddrinfo_a( pcName, pcService, pxHints, ppxResult, NULL, NULL, 0U );
         }
-    #endif /* ( ipconfigDNS_USE_CALLBACKS == 1 ) */
+    #endif
 /*-----------------------------------------------------------*/
 
 /**
@@ -284,7 +284,7 @@
             pxAddrInfo->ai_canonname = pxAddrInfo->xPrivateStorage.ucName;
             ( void ) strncpy( pxAddrInfo->xPrivateStorage.ucName, pcName, sizeof( pxAddrInfo->xPrivateStorage.ucName ) );
 
-            pxAddrInfo->ai_addr = ( ( struct freertos_sockaddr * ) &( pxAddrInfo->xPrivateStorage.sockaddr ) );
+            pxAddrInfo->ai_addr = ((struct freertos_sockaddr *) &(pxAddrInfo->xPrivateStorage.sockaddr));
 
             switch( xFamily )
             {
