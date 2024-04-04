@@ -262,6 +262,7 @@ include( ${UNIT_TEST_DIR}/FreeRTOS_DNS/ut.cmake )
 include( ${UNIT_TEST_DIR}/FreeRTOS_DNS_ConfigNoCallback/ut.cmake )
 include( ${UNIT_TEST_DIR}/FreeRTOS_DNS_Cache/ut.cmake )
 include( ${UNIT_TEST_DIR}/FreeRTOS_DNS_Networking/ut.cmake )
+include( ${UNIT_TEST_DIR}/FreeRTOS_DNS_No_Cache/ut.cmake )
 include( ${UNIT_TEST_DIR}/FreeRTOS_DNS_Callback/ut.cmake )
 include( ${UNIT_TEST_DIR}/FreeRTOS_DNS_Parser/ut.cmake )
 include( ${UNIT_TEST_DIR}/FreeRTOS_IP/ut.cmake )
@@ -321,6 +322,7 @@ FreeRTOS_ARP_utest
     FreeRTOS_DNS_Callback_utest
     FreeRTOS_DNS_ConfigNoCallback_utest
     FreeRTOS_DNS_Networking_utest
+    FreeRTOS_DNS_No_Cache_utest
     FreeRTOS_DNS_Parser_utest
     FreeRTOS_ICMP_utest
     FreeRTOS_ICMP_wo_assert_utest
